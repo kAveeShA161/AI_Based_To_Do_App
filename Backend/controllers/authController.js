@@ -107,3 +107,37 @@ export const logout = async (req, res) => {
         return res.json({ success: false, message: error.message });
     }
 }
+
+// Send Verification OTP to User's Email
+export const sendVerifyOTP = async (req, res) => {
+    try{
+        const { email } = req.body;
+
+        const user = await UserModel.findById(userId);
+
+        if (user.isVerified) {
+            return res.json({ success: false, message: "Account already verified" });
+        }
+
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+        user.verifyOTP = otp;
+        user.verifyOTPExpiry = Date.now() + 24*60*60*1000;
+
+        await user.save();
+
+        const mailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: email,
+            subject: "Verify your account",
+            text:   `Hello ${user.name},\n\nPlease verify your account by entering the following OTP: ${otp}\n\nBest regards,\nSmartDo Team`
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        return res.json({ success: true, message: "OTP sent successfully" });
+
+    } catch (error) {
+        return res.json({ success: false, message: error.message });
+    }
+}
