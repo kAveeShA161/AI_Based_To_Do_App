@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import UserModel from '../models/userModel.js';
+import transporter from '../config/nodemailer.js';
 
 export const resgister = async (req, res) => {
     const { name, email, password } = req.body;
@@ -33,7 +34,20 @@ export const resgister = async (req, res) => {
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
-        })
+        });
+
+        // Sending Welcome Email
+        const mailOptions = {
+            from: process.env.SENDER_EMAIL,
+            to: email,
+            subject: "Welcome to SmartDo",
+            text:   `Hello ${name},\n\nWelcome to SmartDo. Your account has been successfully created with, \n\nEmail: ${email}
+                    \nPassword: ${password}\n\nYou can login using the email id. \n\nBest regards,\nSmartDo Team`
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        // --------------
 
         return res.json({ success: true, message: "User registered successfully" });
 
@@ -86,7 +100,7 @@ export const logout = async (req, res) => {
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         });
-        
+
         return res.json({ success: true, message: "Logout successful" });
 
     } catch (error) {
