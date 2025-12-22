@@ -1,180 +1,189 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import UserModel from '../models/userModel.js';
-import transporter from '../config/nodemailer.js';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import UserModel from "../models/userModel.js";
+import transporter from "../config/nodemailer.js";
 
 export const resgister = async (req, res) => {
-    const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
-    if (!name || !email || !password){
-         return res.json({ success: false, message: "Missing details"});
+  if (!name || !email || !password) {
+    return res.json({ success: false, message: "Missing details" });
+  }
+
+  try {
+    const existingUser = await UserModel.findOne({ email });
+
+    if (existingUser) {
+      return res.json({ success: false, message: "User already exists" });
     }
 
-    try{
-        const existingUser = await UserModel.findOne({ email });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        if (existingUser){
-            return res.json({ success: false, message: "User already exists"});
-        }
+    const newUser = new UserModel({
+      name,
+      email,
+      password: hashedPassword,
+    });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+    await newUser.save();
 
-        const newUser = new UserModel({
-            name,
-            email,
-            password: hashedPassword
-        });
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
-        await newUser.save();
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
-        const token = jwt.sign({ Id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    // Sending Welcome Email
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: "Welcome to SmartDo",
+      text: `Hello ${name},\n\nWelcome to SmartDo. Your account has been successfully created with, \n\nEmail: ${email}
+                    \nPassword: ${password}\n\nYou can login using the email id. \n\nBest regards,\nSmartDo Team`,
+    };
 
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
+    await transporter.sendMail(mailOptions);
 
-        // Sending Welcome Email
-        const mailOptions = {
-            from: process.env.SENDER_EMAIL,
-            to: email,
-            subject: "Welcome to SmartDo",
-            text:   `Hello ${name},\n\nWelcome to SmartDo. Your account has been successfully created with, \n\nEmail: ${email}
-                    \nPassword: ${password}\n\nYou can login using the email id. \n\nBest regards,\nSmartDo Team`
-        };
+    // --------------
 
-        await transporter.sendMail(mailOptions);
-
-        // --------------
-
-        return res.json({ success: true, message: "User registered successfully" });
-
-    } catch (error) {
-        return res.json({ success: false, message: error.message });
-    }
+    return res.json({ success: true, message: "User registered successfully" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
 };
 
-
 export const login = async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (!email || !password) {
-        return res.json({ success: false, message: "Email and password are required" });
+  if (!email || !password) {
+    return res.json({
+      success: false,
+      message: "Email and password are required",
+    });
+  }
+
+  try {
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.json({ success: false, message: "Invalid email or password" });
     }
 
-    try {
-        const user = await UserModel.findOne({ email });
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-        if (!user) {
-            return res.json({ success: false, message: "Invalid email or password" });
-        }
-        
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-
-        if (!isPasswordValid) {
-            return res.json({ success: false, message: "Invalid email or password" });
-        }
-
-        const token = jwt.sign({ Id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
-
-        return res.json({ success: true, message: "Login successful" });
-
-    } catch (error) {
-        return res.json({ success: false, message: error.message });
+    if (!isPasswordValid) {
+      return res.json({ success: false, message: "Invalid email or password" });
     }
-}
 
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.json({ success: true, message: "Login successful" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
 
 export const logout = async (req, res) => {
-    try{
-        res.clearCookie('token', {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-        });
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    });
 
-        return res.json({ success: true, message: "Logout successful" });
-
-    } catch (error) {
-        return res.json({ success: false, message: error.message });
-    }
-}
+    return res.json({ success: true, message: "Logout successful" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
 
 // Send Verification OTP to User's Email
 export const sendVerifyOTP = async (req, res) => {
-    try{
-        const { email } = req.body;
+  try {
+    const { userId } = req.body;
 
-        const user = await UserModel.findById(userId);
+    const user = await UserModel.findById(userId);
 
-        if (user.isVerified) {
-            return res.json({ success: false, message: "Account already verified" });
-        }
-
-        const otp = String(Math.floor(100000 + Math.random() * 900000));
-
-        user.verifyOTP = otp;
-        user.verifyOTPExpiry = Date.now() + 24*60*60*1000;
-
-        await user.save();
-
-        const mailOptions = {
-            from: process.env.SENDER_EMAIL,
-            to: email,
-            subject: "Verify your account",
-            text:   `Hello ${user.name},\n\nPlease verify your account by entering the following OTP: ${otp}\n\nBest regards,\nSmartDo Team`
-        };
-
-        await transporter.sendMail(mailOptions);
-
-        return res.json({ success: true, message: "OTP sent successfully" });
-
-    } catch (error) {
-        return res.json({ success: false, message: error.message });
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
     }
+
+    if (user.isVerified) {
+      return res.json({ success: false, message: "Account already verified" });
+    }
+
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+    user.verifyOTP = otp;
+    user.verifyOTPExpiry = Date.now() + 24 * 60 * 60 * 1000;
+
+    await user.save();
+
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: "Verify your SmartDo account",
+      text: `Hello ${user.name},
+
+            Your OTP is: ${otp}
+
+            This OTP is valid for 24 hours.
+
+            Best regards,
+            SmartDo Team`,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res.json({ success: true, message: "OTP sent successfully" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
 };
 
-
 export const verifyEmail = async (req, res) => {
-    const { userId, otp } = req.body;
+  const { userId, otp } = req.body;
 
-    if(!userId || !otp) {
-        return res.json({ success: false, message: "Missing Details" });
-    }
-    
-    try {
-        const user = await UserModel.findById(userId);
+  if (!userId || !otp) {
+    return res.json({ success: false, message: "Missing Details" });
+  }
 
-        if (!user) {
-            return res.json({ success: false, message: "User not found" });
-        }
+  try {
+    const user = await UserModel.findById(userId);
 
-        if (user.verifyOTP === "" || user.verifyOTP !== otp) {
-            return res.json({ success: false, message: "Invalid OTP!" });
-        }
-
-        if (user.verifyOTPExpiry < Date.now()) {
-            return res.json({ success: false, message: "OTP expired!" });
-        }
-
-        user.isVerified = true;
-        user.verifyOTP = "";
-        user.verifyOTPExpiry = 0;
-        
-        await user.save();
-
-        return res.json({ success: true, message: "Email verified successfully" });
-
-    } catch (error) {
-        return res.json({ success: false, message: error.message });
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
     }
 
-}
+    if (user.verifyOTP === "" || user.verifyOTP !== otp) {
+      return res.json({ success: false, message: "Invalid OTP!" });
+    }
+
+    if (user.verifyOTPExpiry < Date.now()) {
+      return res.json({ success: false, message: "OTP expired!" });
+    }
+
+    user.isVerified = true;
+    user.verifyOTP = "";
+    user.verifyOTPExpiry = 0;
+
+    await user.save();
+
+    return res.json({ success: true, message: "Email verified successfully" });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
