@@ -53,8 +53,8 @@ const NavBar = () => {
       {/* Center Menu */}
       <div className="hidden md:flex items-center gap-6">
         <button
-          onClick={() => navigate("/")}
-          className={`text-xl px-4 py-2 rounded-lg cursor-pointer transition-colors ${location.pathname === '/' ? 'bg-teal-400 text-white' : 'text-gray-600 hover:text-black'}`}
+          onClick={() => navigate("/dashboard")}
+          className={`text-xl px-4 py-2 rounded-lg cursor-pointer transition-colors ${location.pathname === '/dashboard' ? 'bg-teal-400 text-white' : 'text-gray-600 hover:text-black'}`}
         >
           Dashboard
         </button>

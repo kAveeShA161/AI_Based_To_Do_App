@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 import CreateTask from './pages/createTask'
 import MyTasks from './pages/MyTasks'
 import 'react-toastify/dist/ReactToastify.css';
+import Dashboard from './pages/dashboard';
 
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/create-task" element={<CreateTask />} />
         <Route path="/my-tasks" element={<MyTasks />} />
+        <Route path='/dashboard' element={<Dashboard />} />
       </Routes>
 
     </div>
