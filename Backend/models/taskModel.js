@@ -30,6 +30,10 @@ const taskSchema = new mongoose.Schema(
                 type: String,
             },
         ],
+        isCompleted: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true }
 );
