@@ -4,9 +4,9 @@ import UserModel from "../models/userModel.js";
 import transporter from "../config/nodemailer.js";
 
 export const resgister = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { fullName, email, password } = req.body;
 
-  if (!name || !email || !password) {
+  if (!fullName || !email || !password) {
     return res.json({ success: false, message: "Missing details" });
   }
 
@@ -20,7 +20,7 @@ export const resgister = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new UserModel({
-      name,
+      fullName,
       email,
       password: hashedPassword,
     });
@@ -31,20 +31,24 @@ export const resgister = async (req, res) => {
       expiresIn: "7d",
     });
 
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: isProd,                 // true only on HTTPS
+      sameSite: isProd ? "none" : "lax", // ✅ FIX: lax for localhost
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
 
     // Sending Welcome Email
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: email,
       subject: "Welcome to SmartDo",
-      text: `Hello ${name},\n\nWelcome to SmartDo. Your account has been successfully created with, \n\nEmail: ${email}
-                    \nPassword: ${password}\n\nYou can login using the email id. \n\nBest regards,\nSmartDo Team`,
+      text: `Hello ${fullName},\n\nWelcome to SmartDo. Your account has been successfully created. \n\nEmail: ${email}
+                    \n\nYou can login using the email id. \n\nBest regards,\nSmartDo Team`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -83,14 +87,19 @@ export const login = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
+
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: isProd,                 // true only on HTTPS
+      sameSite: isProd ? "none" : "lax", // ✅ FIX: lax for localhost
+      path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.json({ success: true, message: "Login successful" });
+  
   } catch (error) {
     return res.json({ success: false, message: error.message });
   }
@@ -98,10 +107,13 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
+    const isProd = process.env.NODE_ENV === "production";
+
     res.clearCookie("token", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
+      path: "/",
     });
 
     return res.json({ success: true, message: "Logout successful" });

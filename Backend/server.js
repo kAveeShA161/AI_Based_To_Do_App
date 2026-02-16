@@ -11,10 +11,11 @@ const PORT = process.env.PORT || 5001;
 
 connectDB();
 
+const allowedOrigins = [process.env.FRONTEND_URL];
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true }));
-
+app.use(cors({ credentials: true, origin: allowedOrigins }));
 // Api Endpoints
 app.get('/', (req, res) => {
     res.send('Hello from server');
