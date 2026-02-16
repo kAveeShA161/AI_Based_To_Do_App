@@ -1,24 +1,55 @@
 import NavBar from '../components/NavBar'
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { assets } from "./../assets/assets";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from '../context/AppContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const { backendUrl, getUserData } = useContext(AppContext);
 
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    // TODO: call your login API here
-    console.log("Login form data:", form);
+    setError("");
+
+    try {
+      const res = await axios.post(
+        `${backendUrl}/api/auth/login`,
+        { email, password },
+        { withCredentials: true }
+      );
+
+      if (res.data.success) {
+        await getUserData();
+        toast.success("Logged in successfully!");
+        navigate("/");
+        return;
+      }
+
+      toast.error(res.data.message);
+    } catch (err) {
+      console.error("Login error:", err);
+
+      const msg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        "An error occurred during login. Please try again.";
+
+      toast.error(msg);
+    }
   };
+
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="w-full max-w-xl flex flex-col items-center">
         {/* Top Logo Circle */}
         <div onClick={() => navigate('/')} className="cursor-pointer">
@@ -33,7 +64,8 @@ const Login = () => {
 
         {/* Card */}
         <div className="mt-10 w-full bg-white rounded-2xl shadow-md border border-gray-100 px-10 py-10">
-          <form onSubmit={handleSubmit} className="space-y-7">
+
+          <form onSubmit={onSubmitHandler} className="space-y-7">
             {/* Email */}
             <div className="space-y-2">
               <label className="text-xl font-medium text-gray-700">
@@ -42,9 +74,9 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
-                value={form.email}
-                onChange={handleChange}
                 placeholder="you@example.com"
+                onChange={e => setEmail(e.target.value)}
+                value={email}
                 className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
                 required
               />
@@ -58,8 +90,8 @@ const Login = () => {
               <input
                 type="password"
                 name="password"
-                value={form.password}
-                onChange={handleChange}
+                onChange={e => setPassword(e.target.value)}
+                value={password}
                 placeholder="••••••••"
                 className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
                 required
