@@ -11,7 +11,7 @@ export const createTask = async (req, res) => {
         }
 
         const newTask = new Task({
-            user: req.body.userId,
+            user: req.userId,
             title,
             description,
             dueDate,
@@ -35,7 +35,7 @@ export const createTask = async (req, res) => {
 // Get User Tasks
 export const getUserTasks = async (req, res) => {
     try {
-        const tasks = await Task.find({ user: req.body.userId }).sort({ createdAt: -1 });
+        const tasks = await Task.find({ user: req.userId }).sort({ createdAt: -1 });
         return res.json({ success: true, tasks });
     } catch (error) {
         return res.json({ success: false, message: error.message });
@@ -54,7 +54,7 @@ export const updateTask = async (req, res) => {
             return res.json({ success: false, message: "Task not found" });
         }
 
-        if (task.user.toString() !== req.body.userId) {
+        if (task.user.toString() !== req.userId) {
             return res.json({ success: false, message: "Unauthorized" });
         }
 
@@ -87,7 +87,7 @@ export const deleteTask = async (req, res) => {
             return res.json({ success: false, message: "Task not found" });
         }
 
-        if (task.user.toString() !== req.body.userId) {
+        if (task.user.toString() !== req.userId) {
             return res.json({ success: false, message: "Unauthorized" });
         }
 
