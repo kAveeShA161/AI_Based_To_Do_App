@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { assets } from "./../assets/assets";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
+
+  const { backendUrl, setIsLoggedIn, getUserData } = useContext(AppContext);
 
   const [form, setForm] = useState({
     fullName: "",
@@ -15,24 +20,60 @@ const Register = () => {
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
+    // do this with toast notifications instead of showing the error in the form
     setError("");
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    // Simple validations
+    // ✅ validate BEFORE API call
     if (form.password.length < 6) {
-      return setError("Password must be at least 6 characters.");
+      toast.error("Password must be at least 6 characters.");
+      return;
     }
     if (form.password !== form.confirmPassword) {
-      return setError("Passwords do not match.");
+      toast.error("Passwords do not match.");
+      return;
     }
 
-    // TODO: Call register API here
-    console.log("Register data:", form);
+    try {
+      const res = await axios.post(
+        `${backendUrl}/api/auth/register`,
+        {
+          fullName: form.fullName,
+          email: form.email,
+          password: form.password,
+          confirmPassword: form.confirmPassword,
+        },
+        { withCredentials: true } // ✅ don't set defaults here, just use config
+      );
+
+      // ✅ check HTTP status OR your API's returned flag
+      if (res.data.success) {
+        setIsLoggedIn(true);
+        getUserData();
+        toast.success("Registration successful!");
+        navigate("/");
+        return;
+      }
+
+      toast.error(res.data.message);
+    } catch (err) {
+      console.error("Registration error:", err);
+
+      const msg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        err?.message ||
+        "An error occurred during registration. Please try again.";
+
+      toast.error(msg);
+    }
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
@@ -139,8 +180,8 @@ const Register = () => {
                 type="button"
                 className="text-red-400 hover:text-red-500 font-medium cursor-pointer"
                 onClick={() => {
-                    navigate("/login")
-                    console.log("Go to Sign in")
+                  navigate("/login")
+                  console.log("Go to Sign in")
                 }}
               >
                 Sign in
