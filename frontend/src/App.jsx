@@ -7,6 +7,7 @@ import ResetPassword from './pages/ResetPassword'
 import Register from './pages/Register'
 import { ToastContainer } from 'react-toastify';
 import CreateTask from './pages/createTask'
+import MyTasks from './pages/MyTasks'
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/password-reset" element={<ResetPassword />} />
         <Route path="/register" element={<Register />} />
         <Route path="/create-task" element={<CreateTask />} />
+        <Route path="/my-tasks" element={<MyTasks />} />
       </Routes>
 
     </div>
