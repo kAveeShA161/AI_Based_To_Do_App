@@ -61,15 +61,17 @@ const NavBar = () => {
       {/* Right Section */}
       <div className="flex items-center gap-6">
 
-        <button className="text-xl px-4 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 cursor-pointer">
-          + New Task
-        </button>
+        {isLoggedIn && (
+          <button onClick={() => navigate("/create-task")} className="text-xl px-4 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 cursor-pointer">
+            + New Task
+          </button>
+        )}
 
         {isLoggedIn && userData ? (
           <div className="relative flex items-center gap-3" ref={menuRef}>
             <div className="text-right hidden sm:block">
-              <p className="font-medium text-sm">{userData.fullName}</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xl font-medium text-sm">{userData.fullName}</p>
+              <p className="text-sm text-gray-500">
                 {userData.email}
               </p>
             </div>
