@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 import { assets } from "./../assets/assets";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -17,6 +17,7 @@ const NavBar = () => {
 
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const logout = async () => {
     try {
@@ -51,10 +52,18 @@ const NavBar = () => {
 
       {/* Center Menu */}
       <div className="hidden md:flex items-center gap-6">
-        <button className="text-xl px-4 py-2 bg-teal-400 text-white rounded-lg cursor-pointer">
+        <button
+          onClick={() => navigate("/")}
+          className={`text-xl px-4 py-2 rounded-lg cursor-pointer transition-colors ${location.pathname === '/' ? 'bg-teal-400 text-white' : 'text-gray-600 hover:text-black'}`}
+        >
           Dashboard
         </button>
-        <button className="text-xl text-gray-600 hover:text-black cursor-pointer">My Tasks</button>
+        <button
+          onClick={() => navigate("/my-tasks")}
+          className={`text-xl px-4 py-2 rounded-lg cursor-pointer transition-colors ${location.pathname === '/my-tasks' ? 'bg-teal-400 text-white' : 'text-gray-600 hover:text-black'}`}
+        >
+          My Tasks
+        </button>
         <button className="text-xl text-gray-600 hover:text-black cursor-pointer">AI Planner</button>
       </div>
 
