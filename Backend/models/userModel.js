@@ -33,6 +33,17 @@ const userSchema = new mongoose.Schema({
     resetOTPExpiryAt: {
         type: Number,
         default: 0
+    },
+    focusStreak: {
+        type: Number,
+        default: 0
+    },
+    lastActiveDate: {
+        type: Date,
+    },
+    longestStreak: {
+        type: Number,
+        default: 0
     }
 });
 
