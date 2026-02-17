@@ -12,6 +12,7 @@ const MyTasks = () => {
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState("All Tasks");
     const [searchTerm, setSearchTerm] = useState("");
+    const [sortBy, setSortBy] = useState("dueDate");
     const navigate = useNavigate();
 
     const fetchTasks = async () => {
@@ -143,9 +144,13 @@ const MyTasks = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
 
-                    <select className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300">
-                        <option>Sort by Due Date</option>
-                        <option>Sort by Priority</option>
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer"
+                    >
+                        <option value="dueDate">Sort by Due Date</option>
+                        <option value="priority">Sort by Priority</option>
                     </select>
                 </div>
 
@@ -184,7 +189,13 @@ const MyTasks = () => {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                         {filteredTasks.length > 0 ? (
-                            filteredTasks.map(task => (
+                            [...filteredTasks].sort((a, b) => {
+                                if (sortBy === "priority") {
+                                    const order = { High: 1, Medium: 2, Low: 3 };
+                                    return (order[a.priority] || 4) - (order[b.priority] || 4);
+                                }
+                                return new Date(a.dueDate) - new Date(b.dueDate);
+                            }).map(task => (
                                 <TaskCard key={task._id} task={task} onUpdate={handleUpdateTask} onDelete={handleDeleteTask} />
                             ))
                         ) : (
