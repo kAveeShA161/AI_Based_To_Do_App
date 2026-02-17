@@ -3,7 +3,7 @@ import taskModel from "../models/taskModel.js";
 
 export const getDashboardData = async (req, res) => {
     try {
-        const user = await userModel.findById(req.user.id);
+        const user = await userModel.findById(req.userId);
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -32,7 +32,7 @@ export const getDashboardData = async (req, res) => {
 
         await user.save();
 
-        const tasks = await taskModel.find({ user: req.user.id });
+        const tasks = await taskModel.find({ user: req.userId });
 
         const totalTasks = tasks.length;
         const completedTasks = tasks.filter(t => t.isCompleted).length;
@@ -43,10 +43,10 @@ export const getDashboardData = async (req, res) => {
                 : Math.round((completedTasks / totalTasks) * 100);
 
 
-        const todayTaks = tasks.filter(t => {
+        const todayTasks = tasks.filter(t => {
             if (!t.dueDate) return false;
             const taskDate = new Date(t.dueDate).setHours(0, 0, 0, 0);
-            return taskDate === today;
+            return taskDate === today.getTime();
         });
 
         res.json({
