@@ -10,6 +10,7 @@ import CreateTask from './pages/createTask'
 import MyTasks from './pages/MyTasks'
 import 'react-toastify/dist/ReactToastify.css';
 import Dashboard from './pages/dashboard';
+import AIPlanner from './pages/AIPlanner';
 
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
         <Route path="/create-task" element={<CreateTask />} />
         <Route path="/my-tasks" element={<MyTasks />} />
         <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/ai-planner' element={<AIPlanner />} />
       </Routes>
 
     </div>
