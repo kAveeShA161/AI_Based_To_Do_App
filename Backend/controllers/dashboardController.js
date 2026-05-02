@@ -5,16 +5,26 @@ export const getDashboardData = async (req, res) => {
     try {
         const user = await userModel.findById(req.userId);
 
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
 
         const lastActive = user.lastActiveDate
             ? new Date(user.lastActiveDate).setHours(0, 0, 0, 0)
             : null;
+        const todayTime = today.getTime();
+        let shouldSaveUser = false;
 
         if (!lastActive) {
             user.focusStreak = 1;
-        } else {
+            user.lastActiveDate = today;
+            shouldSaveUser = true;
+        } else if (lastActive !== todayTime) {
             const diffDays = (today - lastActive) / (1000 * 60 * 60 * 24);
 
             if (diffDays === 1) {
@@ -22,32 +32,35 @@ export const getDashboardData = async (req, res) => {
             } else if (diffDays > 1) {
                 user.focusStreak = 1;
             }
+            user.lastActiveDate = today;
+            shouldSaveUser = true;
+
+            if (user.focusStreak > user.longestStreak) {
+                user.longestStreak = user.focusStreak;
+            }
         }
 
-        user.lastActiveDate = today;
-
-        if (user.focusStreak > user.longestStreak) {
-            user.longestStreak = user.focusStreak;
+        if (shouldSaveUser) {
+            await user.save();
         }
 
-        await user.save();
-
-        const tasks = await taskModel.find({ user: req.userId });
-
-        const totalTasks = tasks.length;
-        const completedTasks = tasks.filter(t => t.isCompleted).length;
+        const [totalTasks, completedTasks, todayTasks] = await Promise.all([
+            taskModel.countDocuments({ user: req.userId }),
+            taskModel.countDocuments({ user: req.userId, isCompleted: true }),
+            taskModel
+                .find({
+                    user: req.userId,
+                    dueDate: { $gte: today, $lt: tomorrow },
+                })
+                .select("title description dueDate priority category tags isCompleted createdAt")
+                .sort({ isCompleted: 1, dueDate: 1, createdAt: -1 })
+                .lean(),
+        ]);
 
         const completionRate =
             totalTasks === 0
                 ? 0
                 : Math.round((completedTasks / totalTasks) * 100);
-
-
-        const todayTasks = tasks.filter(t => {
-            if (!t.dueDate) return false;
-            const taskDate = new Date(t.dueDate).setHours(0, 0, 0, 0);
-            return taskDate === today.getTime();
-        });
 
         res.json({
             success: true,

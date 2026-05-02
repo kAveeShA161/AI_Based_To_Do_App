@@ -75,8 +75,13 @@ const MyTasks = () => {
     }, []);
 
     const filteredTasks = tasks.filter(task => {
-        const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            task.description?.toLowerCase().includes(searchTerm.toLowerCase());
+        const normalizedSearch = searchTerm.trim().toLowerCase();
+        const matchesSearch =
+            !normalizedSearch ||
+            task.title?.toLowerCase().includes(normalizedSearch) ||
+            task.description?.toLowerCase().includes(normalizedSearch) ||
+            task.category?.toLowerCase().includes(normalizedSearch) ||
+            task.tags?.some((tag) => tag?.toLowerCase().includes(normalizedSearch));
 
         if (!matchesSearch) return false;
 
@@ -119,27 +124,52 @@ const MyTasks = () => {
         }).length;
     };
 
+    const compareTasks = (a, b) => {
+        if (a.isCompleted !== b.isCompleted) {
+            return Number(a.isCompleted) - Number(b.isCompleted);
+        }
+
+        const order = { High: 1, Medium: 2, Low: 3 };
+        const aDate = a.dueDate ? new Date(a.dueDate).getTime() : Number.MAX_SAFE_INTEGER;
+        const bDate = b.dueDate ? new Date(b.dueDate).getTime() : Number.MAX_SAFE_INTEGER;
+
+        if (sortBy === "priority") {
+            const priorityCompare = (order[a.priority] || 4) - (order[b.priority] || 4);
+            if (priorityCompare !== 0) {
+                return priorityCompare;
+            }
+
+            return aDate - bDate;
+        }
+
+        if (aDate !== bDate) {
+            return aDate - bDate;
+        }
+
+        return (order[a.priority] || 4) - (order[b.priority] || 4);
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <NavBar />
 
-            <div className="max-w-7xl mx-auto px-6 py-8">
-                <div className="flex justify-between items-center mb-8">
+            <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8">
+                <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-8">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">My Tasks</h1>
                         <p className="text-2xl text-gray-500 mt-1">{tasks.length} tasks</p>
                     </div>
 
-                    <button onClick={() => navigate("/create-task")} className="text-xl px-4 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 cursor-pointer">
+                    <button onClick={() => navigate("/create-task")} className="text-xl px-4 py-3 bg-red-400 text-white rounded-lg hover:bg-red-500 cursor-pointer w-full sm:w-auto">
                         + New Task
                     </button>
                 </div>
 
-                <div className="bg-white p-4 rounded-xl shadow-sm mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div className="bg-white p-4 rounded-xl shadow-sm mb-8 flex flex-col xl:flex-row gap-4 items-stretch xl:items-center justify-between">
                     <input
                         type="text"
                         placeholder="Search tasks..."
-                        className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                        className="text-xl w-full xl:flex-1 border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -147,7 +177,7 @@ const MyTasks = () => {
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer"
+                        className="text-xl w-full xl:w-80 border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer"
                     >
                         <option value="dueDate">Sort by Due Date</option>
                         <option value="priority">Sort by Priority</option>
@@ -187,15 +217,9 @@ const MyTasks = () => {
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-400"></div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 xl:gap-6">
                         {filteredTasks.length > 0 ? (
-                            [...filteredTasks].sort((a, b) => {
-                                if (sortBy === "priority") {
-                                    const order = { High: 1, Medium: 2, Low: 3 };
-                                    return (order[a.priority] || 4) - (order[b.priority] || 4);
-                                }
-                                return new Date(a.dueDate) - new Date(b.dueDate);
-                            }).map(task => (
+                            [...filteredTasks].sort(compareTasks).map(task => (
                                 <TaskCard key={task._id} task={task} onUpdate={handleUpdateTask} onDelete={handleDeleteTask} />
                             ))
                         ) : (

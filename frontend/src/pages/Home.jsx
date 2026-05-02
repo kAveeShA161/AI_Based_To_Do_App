@@ -1,12 +1,11 @@
-import React from 'react'
-import NavBar from '../components/NavBar'
+import React, { useContext } from "react";
+import { Navigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
 
 const Home = () => {
-  return (
-    <div>
-        <NavBar/>
-    </div>
-  )
-}
+    const { isLoggedIn } = useContext(AppContext);
 
-export default Home
+    return <Navigate to={isLoggedIn ? "/dashboard" : "/login"} replace />;
+};
+
+export default Home;
