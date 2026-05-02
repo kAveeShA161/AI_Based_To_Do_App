@@ -38,4 +38,7 @@ const taskSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+taskSchema.index({ user: 1, dueDate: 1 });
+taskSchema.index({ user: 1, isCompleted: 1 });
+
 export default mongoose.model("Task", taskSchema);

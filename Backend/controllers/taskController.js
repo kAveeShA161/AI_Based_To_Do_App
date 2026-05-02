@@ -98,3 +98,42 @@ export const deleteTask = async (req, res) => {
         return res.json({ success: false, message: error.message });
     }
 };
+
+export const createBulkTasks = async (req, res) => {
+    try {
+        const { tasks } = req.body;
+        const userId = req.userId;
+
+        if (!tasks || !Array.isArray(tasks)) {
+            return res.json({ success: false, message: "Tasks required" });
+        }
+
+        if (!userId) {
+            return res.json({ success: false, message: "Unauthorized" });
+        }
+
+        const formattedTasks = tasks.map(t => ({
+            user: userId,
+            title: t.title?.trim(),
+            description: t.description?.trim() || "",
+            dueDate: t.dueDate || undefined,
+            priority: t.priority || "Medium",
+            category: t.category?.trim() || "",
+            tags: Array.isArray(t.tags) ? t.tags : [],
+        }));
+
+        if (formattedTasks.some((task) => !task.title)) {
+            return res.json({ success: false, message: "Each task needs a title" });
+        }
+
+        await Task.insertMany(formattedTasks);
+
+        return res.json({
+            success: true,
+            message: "Tasks created successfully"
+        });
+
+    } catch (error) {
+        return res.json({ success: false, message: error.message });
+    }
+};
