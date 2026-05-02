@@ -7,6 +7,7 @@ import authRouter from './Routes/authRoutes.js';
 import userRouter from './Routes/userRoutes.js';
 import taskRoutes from "./Routes/taskRoutes.js";
 import dashboardRoutes from "./Routes/dashboardRoutes.js";
+import aiRoutes from "./Routes/aiRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5001;
