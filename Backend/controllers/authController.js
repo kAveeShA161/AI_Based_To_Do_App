@@ -35,8 +35,8 @@ export const resgister = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: isProd,                 // true only on HTTPS
-      sameSite: isProd ? "none" : "lax", // ✅ FIX: lax for localhost
+      secure: isProd,                 
+      sameSite: isProd ? "none" : "lax", 
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -46,9 +46,9 @@ export const resgister = async (req, res) => {
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: email,
-      subject: "Welcome to SmartDo",
-      text: `Hello ${fullName},\n\nWelcome to SmartDo. Your account has been successfully created. \n\nEmail: ${email}
-                    \n\nYou can login using the email id. \n\nBest regards,\nSmartDo Team`,
+      subject: "Welcome to TaskFlow",
+      text: `Hello ${fullName},\n\nWelcome to TaskFlow. Your account has been successfully created. \n\nEmail: ${email}
+                    \n\nYou can login using the email id. \n\nBest regards,\nTaskFlow Team`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -147,7 +147,7 @@ export const sendVerifyOTP = async (req, res) => {
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: user.email,
-      subject: "Verify your SmartDo account",
+      subject: "Verify your TaskFlow account",
       text: `Hello ${user.name},
 
             Your OTP is: ${otp}
@@ -155,7 +155,7 @@ export const sendVerifyOTP = async (req, res) => {
             This OTP is valid for 24 hours.
 
             Best regards,
-            SmartDo Team`,
+            TaskFlow Team`,
     };
 
     await transporter.sendMail(mailOptions);
@@ -234,7 +234,7 @@ export const sendResetOTP = async (req, res) => {
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: user.email,
-      subject: "Reset your SmartDo password",
+      subject: "Reset your TaskFlow password",
       text: `Hello ${user.name},
 
             Your OTP is: ${otp}
@@ -242,7 +242,7 @@ export const sendResetOTP = async (req, res) => {
             This OTP is valid for 15 minutes.
 
             Best regards,
-            SmartDo Team`,
+            TaskFlow Team`,
     };
 
     await transporter.sendMail(mailOptions);
