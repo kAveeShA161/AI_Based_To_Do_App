@@ -64,7 +64,7 @@ const NavBar = () => {
         >
           My Tasks
         </button>
-        <button className="text-xl text-gray-600 hover:text-black cursor-pointer">AI Planner</button>
+        <button onClick={() => navigate("/ai-planner")} className="text-xl text-gray-600 hover:text-black cursor-pointer">AI Planner</button>
       </div>
 
       {/* Right Section */}
