@@ -4,12 +4,17 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import NavBar from "../components/NavBar";
 import TaskCard from "../components/TaskCard";
+import CalendarHistoryModal from "../components/CalendarHistoryModal";
 import { useNavigate } from "react-router-dom";
 
 const MyTasks = () => {
     const { backendUrl } = useContext(AppContext);
     const [tasks, setTasks] = useState([]);
+    const [moodHistory, setMoodHistory] = useState([]);
+    const [calendarOpen, setCalendarOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [calendarLoading, setCalendarLoading] = useState(false);
+    const [calendarLoaded, setCalendarLoaded] = useState(false);
     const [filter, setFilter] = useState("All Tasks");
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState("dueDate");
@@ -32,6 +37,29 @@ const MyTasks = () => {
         }
     };
 
+    const fetchCalendarHistory = async () => {
+        try {
+            setCalendarLoading(true);
+            const { data } = await axios.get(`${backendUrl}/api/dashboard/calendar-history`, {
+                withCredentials: true,
+            });
+
+            if (data.success) {
+                setMoodHistory(data.data?.moodHistory || []);
+                if (!tasks.length && data.data?.tasks) {
+                    setTasks(data.data.tasks);
+                }
+                setCalendarLoaded(true);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setCalendarLoading(false);
+        }
+    };
+
     const handleUpdateTask = async (taskId, updates) => {
         try {
             const { data } = await axios.put(
@@ -40,8 +68,7 @@ const MyTasks = () => {
                 { withCredentials: true }
             );
             if (data.success) {
-                // Optimistic update
-                setTasks(tasks.map(t => t._id === taskId ? { ...t, ...updates } : t));
+                setTasks((prev) => prev.map((task) => (task._id === taskId ? data.task : task)));
                 toast.success("Task updated");
             } else {
                 toast.error(data.message);
@@ -149,6 +176,13 @@ const MyTasks = () => {
         return (order[a.priority] || 4) - (order[b.priority] || 4);
     };
 
+    const openCalendar = async () => {
+        setCalendarOpen(true);
+        if (!calendarLoaded && !calendarLoading) {
+            await fetchCalendarHistory();
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <NavBar />
@@ -160,9 +194,20 @@ const MyTasks = () => {
                         <p className="text-2xl text-gray-500 mt-1">{tasks.length} tasks</p>
                     </div>
 
-                    <button onClick={() => navigate("/create-task")} className="text-xl px-4 py-3 bg-red-400 text-white rounded-lg hover:bg-red-500 cursor-pointer w-full sm:w-auto">
-                        + New Task
-                    </button>
+                    <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+                        <button
+                            type="button"
+                            onClick={openCalendar}
+                            className="text-xl px-4 py-3 bg-white text-gray-700 rounded-lg border border-gray-200 hover:border-red-300 hover:text-red-500 cursor-pointer w-full sm:w-auto"
+                        >
+                            <i className="fa-regular fa-calendar-days mr-2" aria-hidden="true"></i>
+                            History Calendar
+                        </button>
+
+                        <button onClick={() => navigate("/create-task")} className="text-xl px-4 py-3 bg-red-400 text-white rounded-lg hover:bg-red-500 cursor-pointer w-full sm:w-auto">
+                            + New Task
+                        </button>
+                    </div>
                 </div>
 
                 <div className="bg-white p-4 rounded-xl shadow-sm mb-8 flex flex-col xl:flex-row gap-4 items-stretch xl:items-center justify-between">
@@ -231,6 +276,14 @@ const MyTasks = () => {
                     </div>
                 )}
             </div>
+
+            <CalendarHistoryModal
+                open={calendarOpen}
+                onClose={() => setCalendarOpen(false)}
+                tasks={tasks}
+                moodHistory={moodHistory}
+                loading={calendarLoading}
+            />
         </div>
     );
 };

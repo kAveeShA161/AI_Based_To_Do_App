@@ -1,11 +1,14 @@
 import React from "react";
 
-const TaskCard = ({ task, onUpdate, onDelete }) => {
+const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
     const priorityColors = {
         High: "bg-red-100 text-red-700",
         Medium: "bg-yellow-100 text-yellow-700",
         Low: "bg-green-100 text-green-700",
     };
+    const statusPillClass = task.isCompleted
+        ? "bg-emerald-100 text-emerald-700"
+        : "bg-amber-100 text-amber-700";
 
     const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
     const [showEditModal, setShowEditModal] = React.useState(false);
@@ -28,6 +31,9 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
     }, [task]);
 
     const handleCheckboxChange = () => {
+        if (readOnly || !onUpdate) {
+            return;
+        }
         onUpdate(task._id, { isCompleted: !task.isCompleted });
     };
 
@@ -67,6 +73,9 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
     };
 
     const handleEditSave = () => {
+        if (!onUpdate) {
+            return;
+        }
         onUpdate(task._id, {
             title: editForm.title.trim(),
             description: editForm.description.trim(),
@@ -80,23 +89,32 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
     return (
         <>
             <div className={`bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow ${task.isCompleted ? "opacity-75" : ""}`}>
-                <div className="pt-1">
-                    <input
-                        type="checkbox"
-                        checked={task.isCompleted}
-                        onChange={handleCheckboxChange}
-                        className="w-6 h-6 rounded border-gray-300 text-red-400 focus:ring-red-400 cursor-pointer"
-                    />
-                </div>
+                {!readOnly && (
+                    <div className="pt-1">
+                        <input
+                            type="checkbox"
+                            checked={task.isCompleted}
+                            onChange={handleCheckboxChange}
+                            className="w-6 h-6 rounded border-gray-300 text-red-400 focus:ring-red-400 cursor-pointer"
+                        />
+                    </div>
+                )}
 
                 <div className="flex-1">
                     <div className="flex justify-between items-start mb-2 gap-3">
                         <h3 className={`text-xl font-semibold text-gray-800 ${task.isCompleted ? "line-through text-gray-500" : ""}`}>
                             {task.title}
                         </h3>
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${priorityColors[task.priority] || "bg-gray-100"}`}>
-                            {task.priority}
-                        </span>
+                        <div className="flex flex-wrap items-center justify-end gap-2">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${priorityColors[task.priority] || "bg-gray-100"}`}>
+                                {task.priority}
+                            </span>
+                            {readOnly && (
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${statusPillClass}`}>
+                                    {task.isCompleted ? "Done" : "To Do"}
+                                </span>
+                            )}
+                        </div>
                     </div>
 
                     <p className={`text-xl text-gray-600 mb-4 ${task.isCompleted ? "text-gray-400" : ""}`}>
@@ -117,30 +135,32 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
                             )}
                         </div>
 
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={openEditModal}
-                                className="text-xl text-gray-400 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-blue-50"
-                                title="Edit Task"
-                            >
-                                <i className="fa-solid fa-pen"></i>
-                            </button>
-
-                            {onDelete && (
+                        {!readOnly && (
+                            <div className="flex items-center gap-2">
                                 <button
-                                    onClick={handleDeleteClick}
-                                    className="text-xl text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50"
-                                    title="Delete Task"
+                                    onClick={openEditModal}
+                                    className="text-xl text-gray-400 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-blue-50"
+                                    title="Edit Task"
                                 >
-                                    <i className="fa-solid fa-trash"></i>
+                                    <i className="fa-solid fa-pen"></i>
                                 </button>
-                            )}
-                        </div>
+
+                                {onDelete && (
+                                    <button
+                                        onClick={handleDeleteClick}
+                                        className="text-xl text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50"
+                                        title="Delete Task"
+                                    >
+                                        <i className="fa-solid fa-trash"></i>
+                                    </button>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
 
-            {showEditModal && (
+            {!readOnly && showEditModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
                     <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-2xl">
                         <h2 className="text-2xl font-bold mb-5 text-gray-800">Edit Task</h2>
@@ -229,7 +249,7 @@ const TaskCard = ({ task, onUpdate, onDelete }) => {
                 </div>
             )}
 
-            {showDeleteConfirm && (
+            {!readOnly && showDeleteConfirm && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 transition-opacity">
                     <div className="bg-white p-6 rounded-lg shadow-2xl w-150 transform transition-all scale-100">
                         <h2 className="text-xl font-bold mb-4 text-gray-800">Delete Task?</h2>

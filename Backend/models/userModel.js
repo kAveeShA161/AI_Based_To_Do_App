@@ -44,6 +44,24 @@ const userSchema = new mongoose.Schema({
     longestStreak: {
         type: Number,
         default: 0
+    },
+    moodHistory: [
+        {
+            date: {
+                type: Date,
+                required: true,
+            },
+            mood: {
+                type: String,
+                enum: ["motivated", "low-energy", "tired"],
+                required: true,
+            },
+        },
+    ],
+    todayMood: {
+        type: String,
+        enum: ["motivated", "low-energy", "tired", ""],
+        default: "",
     }
 });
 

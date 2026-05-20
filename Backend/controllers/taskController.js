@@ -67,6 +67,7 @@ export const updateTask = async (req, res) => {
 
         if (isCompleted !== undefined) {
             task.isCompleted = isCompleted;
+            task.completedAt = isCompleted ? new Date() : null;
         }
 
         await task.save();
