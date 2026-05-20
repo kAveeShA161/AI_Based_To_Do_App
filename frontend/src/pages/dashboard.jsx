@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import NavBar from "../components/NavBar";
 import TaskCard from "../components/TaskCard";
+import CalendarHistoryModal from "../components/CalendarHistoryModal";
 import { AppContext } from "../context/AppContext";
 
 const moodOptions = [
@@ -10,8 +11,8 @@ const moodOptions = [
         id: "motivated",
         label: "Motivated",
         iconClass: "fa-solid fa-face-smile-beam",
-        description: "Show the highest-priority tasks first.",
-        priorities: ["High"],
+        description: "Show all of today's tasks.",
+        priorities: ["High", "Medium", "Low"],
         accent: "from-emerald-400 to-teal-500",
         ring: "ring-emerald-200",
         bg: "bg-emerald-50",
@@ -44,8 +45,13 @@ const moodOptions = [
 const Dashboard = () => {
     const { userData, backendUrl } = useContext(AppContext);
     const [dashboard, setDashboard] = useState(null);
+    const [calendarData, setCalendarData] = useState({ tasks: [], moodHistory: [] });
+    const [calendarOpen, setCalendarOpen] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [calendarLoading, setCalendarLoading] = useState(false);
+    const [calendarLoaded, setCalendarLoaded] = useState(false);
     const [selectedMood, setSelectedMood] = useState("motivated");
+    const [showAllTasks, setShowAllTasks] = useState(true);
 
     const fetchDashboard = async () => {
         try {
@@ -55,6 +61,9 @@ const Dashboard = () => {
 
             if (data.success) {
                 setDashboard(data.data);
+                if (data.data?.todayMood) {
+                    setSelectedMood(data.data.todayMood);
+                }
             } else {
                 toast.error(data.message);
             }
@@ -62,6 +71,29 @@ const Dashboard = () => {
             toast.error(error.response?.data?.message || error.message);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const fetchCalendarHistory = async () => {
+        try {
+            setCalendarLoading(true);
+            const { data } = await axios.get(`${backendUrl}/api/dashboard/calendar-history`, {
+                withCredentials: true,
+            });
+
+            if (data.success) {
+                setCalendarData({
+                    tasks: data.data?.tasks || [],
+                    moodHistory: data.data?.moodHistory || [],
+                });
+                setCalendarLoaded(true);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setCalendarLoading(false);
         }
     };
 
@@ -74,6 +106,12 @@ const Dashboard = () => {
             );
 
             if (data.success) {
+                setCalendarData((prev) => ({
+                    ...prev,
+                    tasks: prev.tasks.map((task) =>
+                        task._id === taskId ? { ...task, ...data.task } : task
+                    ),
+                }));
                 fetchDashboard();
                 toast.success("Task updated");
             } else {
@@ -84,8 +122,71 @@ const Dashboard = () => {
         }
     };
 
+    const handleMoodSelect = async (moodId) => {
+        setSelectedMood(moodId);
+        setShowAllTasks(moodId === "motivated");
+
+        try {
+            const { data } = await axios.post(
+                `${backendUrl}/api/dashboard/mood`,
+                { mood: moodId },
+                { withCredentials: true }
+            );
+
+            if (!data.success) {
+                toast.error(data.message);
+                return;
+            }
+
+            setDashboard((prev) =>
+                prev
+                    ? {
+                        ...prev,
+                        todayMood: moodId,
+                    }
+                    : prev
+            );
+
+            setCalendarData((prev) => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const todayKey = today.toISOString().split("T")[0];
+                const nextMoodHistory = [...(prev.moodHistory || [])];
+                const existingIndex = nextMoodHistory.findIndex((entry) => {
+                    const entryDate = new Date(entry.date);
+                    entryDate.setHours(0, 0, 0, 0);
+                    return entryDate.toISOString().split("T")[0] === todayKey;
+                });
+
+                if (existingIndex >= 0) {
+                    nextMoodHistory[existingIndex] = {
+                        ...nextMoodHistory[existingIndex],
+                        mood: moodId,
+                    };
+                } else {
+                    nextMoodHistory.push({ date: today.toISOString(), mood: moodId });
+                }
+
+                return {
+                    ...prev,
+                    moodHistory: nextMoodHistory,
+                };
+            });
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message);
+        }
+    };
+
+    const openCalendar = async () => {
+        setCalendarOpen(true);
+        if (!calendarLoaded && !calendarLoading) {
+            await fetchCalendarHistory();
+        }
+    };
+
     useEffect(() => {
         fetchDashboard();
+        fetchCalendarHistory();
     }, [backendUrl]);
 
     const getGreeting = () => {
@@ -116,23 +217,36 @@ const Dashboard = () => {
     const activeMood =
         moodOptions.find((mood) => mood.id === selectedMood) || moodOptions[0];
 
-    const filteredTodayTasks = sortedTodayTasks.filter((task) =>
-        activeMood.priorities.includes(task.priority || "Medium")
-    );
+    const filteredTodayTasks = showAllTasks
+        ? sortedTodayTasks
+        : sortedTodayTasks.filter((task) =>
+            activeMood.priorities.includes(task.priority || "Medium")
+        );
 
     return (
         <div className="min-h-screen bg-gray-50">
             <NavBar />
 
             <div className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 xl:px-10">
-                <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">
-                        {getGreeting()}, {userData?.fullName} !
-                    </h1>
+                <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900">
+                            {getGreeting()}, {userData?.fullName} !
+                        </h1>
 
-                    <p className="mt-1 text-base text-gray-500 sm:text-lg">
-                        You have {dashboard?.todayTasks?.filter((task) => !task.isCompleted).length || 0} tasks pending today. Let&apos;s make it a productive day!
-                    </p>
+                        <p className="mt-1 text-base text-gray-500 sm:text-lg">
+                            You have {dashboard?.todayTasks?.filter((task) => !task.isCompleted).length || 0} tasks pending today. Let&apos;s make it a productive day!
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={openCalendar}
+                        className="inline-flex items-center justify-center gap-3 self-start rounded-2xl border border-slate-200 bg-white px-5 py-3 text-base font-medium text-slate-700 shadow-sm transition-colors hover:border-teal-300 hover:text-teal-600"
+                    >
+                        <i className="fa-regular fa-calendar-days text-lg" aria-hidden="true"></i>
+                        View History Calendar
+                    </button>
                 </div>
 
                 <div className="mb-8 rounded-3xl border border-gray-100 bg-white px-4 py-6 shadow-sm sm:mb-10 sm:px-6 lg:px-8">
@@ -153,7 +267,7 @@ const Dashboard = () => {
                                 <button
                                     key={mood.id}
                                     type="button"
-                                    onClick={() => setSelectedMood(mood.id)}
+                                    onClick={() => handleMoodSelect(mood.id)}
                                     className={`rounded-2xl border px-4 py-5 text-center transition-all duration-200 ${isActive
                                         ? `${mood.bg} ${mood.text} border-transparent ring-2 ${mood.ring} shadow-md`
                                         : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:shadow-sm"
@@ -218,9 +332,24 @@ const Dashboard = () => {
                         <div>
                             <h2 className="text-xl font-bold">Today&apos;s Focus</h2>
                             <p className="text-sm text-gray-500">
-                                {activeMood.label} mode is showing {filteredTodayTasks.length} matching task{filteredTodayTasks.length === 1 ? "" : "s"}.
+                                {showAllTasks
+                                    ? `Showing all ${filteredTodayTasks.length} task${filteredTodayTasks.length === 1 ? "" : "s"} for today.`
+                                    : `${activeMood.label} mode is showing ${filteredTodayTasks.length} matching task${filteredTodayTasks.length === 1 ? "" : "s"}.`}
                             </p>
                         </div>
+
+                        <button
+                            type="button"
+                            onClick={() => setShowAllTasks((prev) => !prev)}
+                            className={`inline-flex items-center justify-center gap-2 self-start rounded-xl border px-4 py-2 text-sm font-medium transition-colors ${
+                                showAllTasks
+                                    ? "border-teal-200 bg-teal-50 text-teal-700"
+                                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900"
+                            }`}
+                        >
+                            <i className="fa-solid fa-layer-group" aria-hidden="true"></i>
+                            {showAllTasks ? "Show Mood Tasks" : "Show All Tasks"}
+                        </button>
                     </div>
 
                     <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:gap-6">
@@ -234,12 +363,20 @@ const Dashboard = () => {
                             ))
                         ) : (
                             <div className="rounded-xl bg-white p-8 text-center text-gray-500">
-                                
+                                No tasks match the selected mood right now.
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+
+            <CalendarHistoryModal
+                open={calendarOpen}
+                onClose={() => setCalendarOpen(false)}
+                tasks={calendarData.tasks}
+                moodHistory={calendarData.moodHistory}
+                loading={calendarLoading}
+            />
         </div>
     );
 };

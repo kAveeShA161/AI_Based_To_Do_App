@@ -4,10 +4,17 @@ import { assets } from "./../assets/assets";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import CalendarHistoryModal from "./CalendarHistoryModal";
+import MonthlyStatsModal from "./MonthlyStatsModal";
 
-const NavBar = () => {
+const NavBar = ({ actionSlot = null }) => {
   const [open, setOpen] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [statsOpen, setStatsOpen] = useState(false);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyData, setHistoryData] = useState({ tasks: [], moodHistory: [] });
 
   const menuRef = useRef();
 
@@ -16,6 +23,47 @@ const NavBar = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const fetchHistoryData = async () => {
+    if (!isLoggedIn) {
+      return;
+    }
+
+    try {
+      setHistoryLoading(true);
+      const { data } = await axios.get(`${backendUrl}/api/dashboard/calendar-history`, {
+        withCredentials: true,
+      });
+
+      if (data.success) {
+        setHistoryData({
+          tasks: data.data?.tasks || [],
+          moodHistory: data.data?.moodHistory || [],
+        });
+        setHistoryLoaded(true);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  const openCalendar = async () => {
+    setCalendarOpen(true);
+    if (!historyLoaded && !historyLoading) {
+      await fetchHistoryData();
+    }
+  };
+
+  const openStats = async () => {
+    setStatsOpen(true);
+    if (!historyLoaded && !historyLoading) {
+      await fetchHistoryData();
+    }
+  };
 
   const logout = async () => {
     try {
@@ -87,6 +135,29 @@ const NavBar = () => {
 
       {/* Right Section */}
       <div className="flex items-center gap-4">
+        {isLoggedIn && (
+          <div className="hidden items-center gap-3 sm:flex">
+            <button
+              type="button"
+              onClick={openStats}
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-teal-300 hover:text-teal-600"
+              title="Open monthly stats"
+            >
+              <i className="fa-solid fa-chart-line text-lg" aria-hidden="true"></i>
+            </button>
+
+            <button
+              type="button"
+              onClick={openCalendar}
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-teal-300 hover:text-teal-600"
+              title="Open history calendar"
+            >
+              <i className="fa-regular fa-calendar-days text-lg" aria-hidden="true"></i>
+            </button>
+          </div>
+        )}
+
+        {actionSlot}
 
         {isLoggedIn && (
           <button
@@ -171,6 +242,26 @@ const NavBar = () => {
             <>
               <button
                 onClick={() => {
+                  openStats();
+                  setMobileMenu(false);
+                }}
+                className="text-lg px-4 py-2 text-slate-700 font-semibold"
+              >
+                Monthly Stats
+              </button>
+
+              <button
+                onClick={() => {
+                  openCalendar();
+                  setMobileMenu(false);
+                }}
+                className="text-lg px-4 py-2 text-slate-700 font-semibold"
+              >
+                History Calendar
+              </button>
+
+              <button
+                onClick={() => {
                   navigate("/create-task");
                   setMobileMenu(false);
                 }}
@@ -211,6 +302,20 @@ const NavBar = () => {
           )}
         </div>
       )}
+
+      <CalendarHistoryModal
+        open={calendarOpen}
+        onClose={() => setCalendarOpen(false)}
+        tasks={historyData.tasks}
+        moodHistory={historyData.moodHistory}
+        loading={historyLoading}
+      />
+
+      <MonthlyStatsModal
+        open={statsOpen}
+        onClose={() => setStatsOpen(false)}
+        tasks={historyData.tasks}
+      />
     </div>
   );
 };
