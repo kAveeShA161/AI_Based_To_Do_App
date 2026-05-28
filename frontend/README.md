@@ -1,16 +1,116 @@
-# React + Vite
+# TaskFlow Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React client for the AI Based To Do App. It provides the browser UI for authentication, task management, dashboard analytics, calendar history, mood tracking, and AI-assisted task planning.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19 with functional components and hooks.
+- Vite 7 for development server and production builds.
+- React Router 7 for client-side routing.
+- Tailwind CSS 4 through the Vite plugin.
+- Axios for API calls with cookie-based authentication.
+- React Toastify for user feedback.
+- ESLint 9 with React Hooks and React Refresh rules.
 
-## React Compiler
+## Application Routes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Route | Purpose |
+| --- | --- |
+| `/` | Landing/home page |
+| `/login` | User login |
+| `/register` | User registration |
+| `/email-verify` | Email OTP verification |
+| `/password-reset` | Password reset flow |
+| `/create-task` | Create a new task |
+| `/my-tasks` | View, update, complete, and delete tasks |
+| `/dashboard` | Productivity dashboard, today's tasks, mood, and calendar history |
+| `/ai-planner` | Generate actionable tasks from a goal |
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```text
+frontend/
++-- public/
+|   +-- logo.png
+|   +-- vite.svg
++-- src/
+|   +-- assets/
+|   +-- components/
+|   +-- context/
+|   |   +-- AppContext.jsx
+|   +-- pages/
+|   +-- App.jsx
+|   +-- index.css
+|   +-- main.jsx
++-- eslint.config.js
++-- package.json
++-- vite.config.js
+```
+
+## Environment Variables
+
+Create `frontend/.env`:
+
+```env
+VITE_BACKEND_URL=http://localhost:5001
+```
+
+`VITE_BACKEND_URL` must match the backend server origin. The frontend sends credentialed requests to the API, so the backend `FRONTEND_URL` value must also match the frontend origin.
+
+## Setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+Preview the production build locally:
+
+```bash
+npm run preview
+```
+
+Run linting:
+
+```bash
+npm run lint
+```
+
+## API Integration
+
+The app reads the backend URL from `import.meta.env.VITE_BACKEND_URL` in `src/context/AppContext.jsx`. Authentication state and user data are exposed through `AppContext`.
+
+Main API areas used by the frontend:
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+- `GET /api/user/getUserData`
+- `POST /api/task/create`
+- `GET /api/task/all`
+- `PUT /api/task/update/:id`
+- `DELETE /api/task/delete/:id`
+- `POST /api/task/bulk-create`
+- `GET /api/dashboard`
+- `GET /api/dashboard/calendar-history`
+- `POST /api/dashboard/mood`
+- `POST /api/ai/generate`
+
+## Development Notes
+
+- Keep API calls using `withCredentials: true` when authentication cookies are required.
+- Vite is configured with a development proxy for `/api` to `http://localhost:5001`, but the application code currently uses `VITE_BACKEND_URL` directly.
+- Static images are stored in both `public/` and `src/assets/`; use `public/` for files referenced by URL and `src/assets/` for files imported by React modules.
