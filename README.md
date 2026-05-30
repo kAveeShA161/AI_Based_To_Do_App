@@ -26,6 +26,7 @@ The project is split into two independently runnable applications:
 | Database | MongoDB |
 | Email | Nodemailer with Brevo SMTP relay |
 | AI | Google Generative AI SDK |
+| Containers | Docker, Docker Compose, Nginx |
 
 ## Repository Structure
 
@@ -37,6 +38,7 @@ The project is split into two independently runnable applications:
 |   +-- middleware/
 |   +-- models/
 |   +-- Routes/
+|   +-- Dockerfile
 |   +-- package.json
 |   +-- server.js
 +-- frontend/
@@ -46,8 +48,11 @@ The project is split into two independently runnable applications:
 |   |   +-- components/
 |   |   +-- context/
 |   |   +-- pages/
+|   +-- Dockerfile
+|   +-- nginx.conf
 |   +-- package.json
 |   +-- vite.config.js
++-- docker-compose.yml
 +-- README.md
 ```
 
@@ -58,6 +63,7 @@ The project is split into two independently runnable applications:
 - MongoDB connection string, either local MongoDB or MongoDB Atlas.
 - Brevo SMTP credentials for email delivery.
 - Google Gemini API key for AI planning.
+- Docker Desktop if you want to run the containerized application.
 
 ## Environment Variables
 
@@ -86,6 +92,8 @@ VITE_BACKEND_URL=http://localhost:5001
 
 The backend appends `/AI_Based_To_Do_App` to `MONGODB_URI`, so the URI should point to the MongoDB server or cluster base path.
 
+For Docker Compose, the frontend container is served by Nginx and proxies `/api` to the backend container. You can leave `VITE_BACKEND_URL` empty for the Docker build so requests use the same origin.
+
 ## Local Development
 
 Install and run the backend:
@@ -108,6 +116,47 @@ Default local URLs:
 
 - Frontend: `http://localhost:5173`
 - Backend API: `http://localhost:5001`
+
+## Docker
+
+The easiest way to run the full application in containers is Docker Compose from the repository root:
+
+```bash
+docker compose up --build
+```
+
+Open the app at:
+
+```text
+http://localhost:3000
+```
+
+Compose starts:
+
+- Frontend: Nginx container on `http://localhost:3000`
+- Backend API: Node/Express container on `http://localhost:5001`
+
+Stop the containers:
+
+```bash
+docker compose down
+```
+
+Rebuild after Dockerfile or dependency changes:
+
+```bash
+docker compose build --no-cache
+docker compose up
+```
+
+You can also build each image separately:
+
+```bash
+docker build -t taskflow-backend ./Backend
+docker build -t taskflow-frontend ./frontend
+```
+
+The backend service reads `Backend/.env` through `env_file`, so that file must use standard `.env` syntax. Use `#` for comments, not `//`.
 
 ## Production Notes
 

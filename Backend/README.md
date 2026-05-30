@@ -36,6 +36,8 @@ Backend/
 |   +-- dashboardRoutes.js
 |   +-- taskRoutes.js
 |   +-- userRoutes.js
++-- .dockerignore
++-- Dockerfile
 +-- package.json
 +-- server.js
 ```
@@ -64,6 +66,7 @@ Important details:
 - `JWT_SECRET` signs the auth token stored in the `token` cookie.
 - `NODE_ENV=production` enables secure cross-site cookies for HTTPS deployments.
 - `GEMINI_MODEL` is optional; the default is `gemini-2.5-flash`.
+- Docker Compose reads this file through `env_file`, so comments must start with `#`, not `//`.
 
 ## Setup
 
@@ -87,6 +90,34 @@ npm start
 
 By default the server listens on `http://localhost:5001`.
 
+## Docker
+
+Build the backend image from the repository root:
+
+```bash
+docker build -t taskflow-backend ./Backend
+```
+
+Run the backend container directly:
+
+```bash
+docker run --rm -p 5001:5001 --env-file Backend/.env taskflow-backend
+```
+
+The recommended full-app workflow is Docker Compose from the repository root:
+
+```bash
+docker compose up --build
+```
+
+Compose builds this backend image, loads `Backend/.env`, exposes the API on `http://localhost:5001`, and connects the frontend container to it through Docker's internal service name `backend`.
+
+Stop the Compose stack:
+
+```bash
+docker compose down
+```
+
 ## API Routes
 
 ### Health Check
@@ -106,7 +137,7 @@ By default the server listens on `http://localhost:5001`.
 | `POST` | `/api/auth/verify-email` | Yes | Verifies account email using OTP |
 | `POST` | `/api/auth/is-auth` | Yes | Confirms current session is authenticated |
 | `POST` | `/api/auth/send-reset-otp` | No | Sends password reset OTP |
-| `POST` | `/api/auth/reset-password` | Yes | Resets password after OTP validation |
+| `POST` | `/api/auth/reset-password` | No | Resets password after OTP validation |
 
 ### User
 

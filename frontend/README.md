@@ -42,7 +42,10 @@ frontend/
 |   +-- App.jsx
 |   +-- index.css
 |   +-- main.jsx
++-- .dockerignore
++-- Dockerfile
 +-- eslint.config.js
++-- nginx.conf
 +-- package.json
 +-- vite.config.js
 ```
@@ -56,6 +59,8 @@ VITE_BACKEND_URL=http://localhost:5001
 ```
 
 `VITE_BACKEND_URL` must match the backend server origin. The frontend sends credentialed requests to the API, so the backend `FRONTEND_URL` value must also match the frontend origin.
+
+For Docker Compose, the frontend is served by Nginx and `/api` is proxied to the backend container. In that setup, `VITE_BACKEND_URL` can be empty so Axios calls use same-origin `/api` routes.
 
 ## Setup
 
@@ -89,6 +94,40 @@ Run linting:
 npm run lint
 ```
 
+## Docker
+
+Build the frontend image from the repository root:
+
+```bash
+docker build -t taskflow-frontend ./frontend
+```
+
+Run the frontend container directly:
+
+```bash
+docker run --rm -p 3000:80 taskflow-frontend
+```
+
+Open the frontend at:
+
+```text
+http://localhost:3000
+```
+
+For the complete app, use Docker Compose from the repository root:
+
+```bash
+docker compose up --build
+```
+
+Compose starts the frontend on `http://localhost:3000` and the backend on `http://localhost:5001`. The Nginx config in `nginx.conf` serves the Vite production build and proxies `/api` requests to the backend service.
+
+Stop the Compose stack:
+
+```bash
+docker compose down
+```
+
 ## API Integration
 
 The app reads the backend URL from `import.meta.env.VITE_BACKEND_URL` in `src/context/AppContext.jsx`. Authentication state and user data are exposed through `AppContext`.
@@ -113,4 +152,5 @@ Main API areas used by the frontend:
 
 - Keep API calls using `withCredentials: true` when authentication cookies are required.
 - Vite is configured with a development proxy for `/api` to `http://localhost:5001`, but the application code currently uses `VITE_BACKEND_URL` directly.
+- The Docker image uses Nginx instead of the Vite development server.
 - Static images are stored in both `public/` and `src/assets/`; use `public/` for files referenced by URL and `src/assets/` for files imported by React modules.
