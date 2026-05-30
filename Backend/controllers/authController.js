@@ -236,7 +236,7 @@ export const sendResetOTP = async (req, res) => {
       from: process.env.SENDER_EMAIL,
       to: user.email,
       subject: "Reset your TaskFlow password",
-      text: `Hello ${user.fullName},
+      text: `Hello,
 
             Your OTP is: ${otp}
 
