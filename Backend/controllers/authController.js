@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/userModel.js";
 import transporter from "../config/nodemailer.js";
@@ -211,7 +212,7 @@ export const isAuthenticated = async (req, res) => {
 
 // Send Password Reset OTP
 export const sendResetOTP = async (req, res) => {
-  const { email } = req.body;
+  const email = req.body.email?.trim().toLowerCase();
 
   if (!email) {
     return res.json({ success: false, message: "Email is required!" });
@@ -224,10 +225,10 @@ export const sendResetOTP = async (req, res) => {
       return res.json({ success: false, message: "User not found" });
     }
 
-    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    const otp = String(crypto.randomInt(100000, 1000000));
 
     user.resetOTP = otp;
-    user.resetOTPExpiryAt = Date.now() + 15 * 60 * 60 * 1000;
+    user.resetOTPExpiryAt = Date.now() + 15 * 60 * 1000;
 
     await user.save();
 
@@ -235,7 +236,7 @@ export const sendResetOTP = async (req, res) => {
       from: process.env.SENDER_EMAIL,
       to: user.email,
       subject: "Reset your TaskFlow password",
-      text: `Hello ${user.name},
+      text: `Hello ${user.fullName},
 
             Your OTP is: ${otp}
 
@@ -255,12 +256,20 @@ export const sendResetOTP = async (req, res) => {
 
 // Reset Password
 export const resetPassword = async (req, res) => {
-  const { email, otp, newPassword } = req.body;
+  const email = req.body.email?.trim().toLowerCase();
+  const { otp, newPassword } = req.body;
 
   if (!email || !otp || !newPassword) {
     return res.json({
       success: false,
       message: "Email, OTP, and new password are required",
+    });
+  }
+
+  if (newPassword.length < 6) {
+    return res.json({
+      success: false,
+      message: "Password must be at least 6 characters",
     });
   }
 
