@@ -169,3 +169,4 @@ The backend service reads `Backend/.env` through `env_file`, so that file must u
 
 - Frontend details: [`frontend/README.md`](frontend/README.md)
 - Backend details: [`Backend/README.md`](Backend/README.md)
+- Deployment guide: [`DEPLOYMENT.md`](DEPLOYMENT.md)

@@ -1,0 +1,19 @@
+services:
+  backend:
+    image: ghcr.io/kaveesha161/ai_based_to_do_app-backend:latest
+    container_name: taskflow-backend
+    env_file:
+      - ./Backend/.env
+    environment:
+      NODE_ENV: production
+      PORT: 5001
+    restart: unless-stopped
+
+  frontend:
+    image: ghcr.io/kaveesha161/ai_based_to_do_app-frontend:latest
+    container_name: taskflow-frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    restart: unless-stopped

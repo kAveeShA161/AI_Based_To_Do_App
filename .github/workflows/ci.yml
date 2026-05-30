@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  validate:
+    name: Validate app
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: |
+          npm install
+          npm install @rollup/rollup-linux-x64-gnu --no-save
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Install backend dependencies
+        working-directory: Backend
+        run: npm ci
+
+      - name: Check backend syntax
+        working-directory: Backend
+        run: |
+          node --check server.js
+          node --check controllers/authController.js
+          node --check Routes/authRoutes.js
+
+      - name: Create CI env file
+        run: |
+          cat > Backend/.env <<'EOF'
+          PORT=5001
+          NODE_ENV=production
+          MONGODB_URI=mongodb://localhost:27017
+          JWT_SECRET=ci_dummy_secret
+          FRONTEND_URL=http://localhost:3000
+          SMTP_USER=ci_dummy_user
+          SMTP_PASSWORD=ci_dummy_password
+          SENDER_EMAIL=no-reply@example.com
+          GEMINI_API_KEY=ci_dummy_key
+          GEMINI_MODEL=gemini-2.5-flash
+          EOF
+
+      - name: Validate Docker Compose config
+        run: docker compose config
