@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: taskflow-backend
+    env_file:
+      - ./Backend/.env
+    environment:
+      NODE_ENV: production
+      PORT: 5001
+      FRONTEND_URL: http://localhost:3000
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taskflow-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    restart: unless-stopped
