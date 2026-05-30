@@ -122,11 +122,11 @@ const MyTasks = () => {
                 return taskDate > today;
             case "Completed":
                 return task.isCompleted;
-            case "High Priority":
+            case "High Difficulty":
                 return task.priority === "High";
-            case "Medium":
+            case "Medium Difficulty":
                 return task.priority === "Medium";
-            case "Low":
+            case "Low Difficulty":
                 return task.priority === "Low";
             default:
                 return true;
@@ -143,9 +143,9 @@ const MyTasks = () => {
                 case "Today": return taskDate === today;
                 case "Upcoming": return taskDate > today;
                 case "Completed": return task.isCompleted;
-                case "High Priority": return task.priority === "High";
-                case "Medium": return task.priority === "Medium";
-                case "Low": return task.priority === "Low";
+                case "High Difficulty": return task.priority === "High";
+                case "Medium Difficulty": return task.priority === "Medium";
+                case "Low Difficulty": return task.priority === "Low";
                 default: return true;
             }
         }).length;
@@ -225,7 +225,7 @@ const MyTasks = () => {
                         className="text-xl w-full xl:w-80 border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer"
                     >
                         <option value="dueDate">Sort by Due Date</option>
-                        <option value="priority">Sort by Priority</option>
+                        <option value="priority">Sort by Difficulty</option>
                     </select>
                 </div>
 
@@ -235,9 +235,9 @@ const MyTasks = () => {
                         { name: "Today", count: getCount("Today"), icon: "fa-regular fa-calendar" },
                         { name: "Upcoming", count: getCount("Upcoming"), icon: "fa-regular fa-clock" },
                         { name: "Completed", count: getCount("Completed"), icon: "fa-regular fa-circle-check" },
-                        { name: "High Priority", count: getCount("High Priority"), icon: "fa-solid fa-circle-exclamation" },
-                        { name: "Medium", count: getCount("Medium"), icon: "fa-solid fa-circle-exclamation" },
-                        { name: "Low", count: getCount("Low"), icon: "fa-solid fa-circle-exclamation" },
+                        { name: "High Difficulty", count: getCount("High Difficulty"), icon: "fa-solid fa-circle-exclamation" },
+                        { name: "Medium Difficulty", count: getCount("Medium Difficulty"), icon: "fa-solid fa-circle-exclamation" },
+                        { name: "Low Difficulty", count: getCount("Low Difficulty"), icon: "fa-solid fa-circle-exclamation" },
                     ].map((f) => (
                         <button
                             key={f.name}

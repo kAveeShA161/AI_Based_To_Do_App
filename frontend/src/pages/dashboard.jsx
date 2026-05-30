@@ -22,7 +22,7 @@ const moodOptions = [
         id: "low-energy",
         label: "Low Energy",
         iconClass: "fa-solid fa-face-frown",
-        description: "Pick medium-priority tasks that feel manageable.",
+        description: "Pick medium difficulty tasks that feel manageable.",
         priorities: ["Medium"],
         accent: "from-amber-400 to-orange-500",
         ring: "ring-amber-200",

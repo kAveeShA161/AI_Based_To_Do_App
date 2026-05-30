@@ -165,7 +165,7 @@ const AIPlanner = () => {
                                     Edit Your Tasks
                                 </h2>
                                 <p className="mt-1 text-sm text-gray-500 sm:text-base">
-                                    Review titles, notes, dates, and priority before saving.
+                                    Review titles, notes, dates, and difficulty before saving.
                                 </p>
                             </div>
 
@@ -202,7 +202,7 @@ const AIPlanner = () => {
                                         <span
                                             className={`px-3 py-1 rounded-full text-sm font-medium w-fit ${priorityStyles[task.priority] || "bg-gray-100 text-gray-700"}`}
                                         >
-                                            {task.priority} Priority
+                                            {task.priority} Difficulty
                                         </span>
                                     </div>
 
@@ -237,7 +237,7 @@ const AIPlanner = () => {
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                             <div>
                                                 <label className="text-base font-medium text-gray-700 sm:text-lg">
-                                                    Priority
+                                                    Difficulty Level
                                                 </label>
                                                 <select
                                                     className="mt-2 w-full cursor-pointer rounded-lg border border-gray-200 px-4 py-3 text-base outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-lg"

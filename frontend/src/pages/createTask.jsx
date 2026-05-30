@@ -116,7 +116,7 @@ const CreateTask = () => {
                     />
 
                     <label className="mt-5 block text-base font-medium text-gray-700 sm:text-lg">
-                        Priority
+                        Difficulty Level
                     </label>
                     <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
                         {["Low", "Medium", "High"].map((level) => (

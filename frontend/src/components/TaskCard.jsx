@@ -107,7 +107,7 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
                         </h3>
                         <div className="flex flex-wrap items-center justify-end gap-2">
                             <span className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${priorityColors[task.priority] || "bg-gray-100"}`}>
-                                {task.priority}
+                                {task.priority} Difficulty
                             </span>
                             {readOnly && (
                                 <span className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${statusPillClass}`}>
@@ -204,7 +204,7 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
 
                                 <div>
                                     <label className="text-lg font-medium text-gray-700">
-                                        Priority
+                                        Difficulty Level
                                     </label>
                                     <select
                                         value={editForm.priority}
