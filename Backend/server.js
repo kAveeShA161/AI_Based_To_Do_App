@@ -18,7 +18,7 @@ const allowedOrigins = [process.env.FRONTEND_URL];
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ credentials: true, origin: allowedOrigins }));
+app.use(cors({ credentials: true, origin: 'https://ai-based-to-do-app.vercel.app/' }));
 // Api Endpoints
 app.get('/', (req, res) => {
   res.send('Hello from server');
