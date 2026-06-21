@@ -211,21 +211,21 @@ const CalendarHistoryModal = ({
     }
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6">
-            <div className="relative flex max-h-[92vh] w-full max-w-7xl flex-col overflow-hidden rounded-3xl bg-slate-50 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 px-4 py-4 sm:items-center sm:py-6">
+            <div className="relative flex max-h-[calc(100vh-2rem)] w-full max-w-7xl flex-col overflow-hidden rounded-3xl bg-slate-50 shadow-2xl sm:max-h-[92vh]">
                 <button
                     type="button"
                     onClick={onClose}
-                    className="absolute right-4 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm transition-colors hover:text-slate-900"
+                    className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm transition-colors hover:text-slate-900 sm:right-4 sm:h-11 sm:w-11"
                     aria-label="Close calendar history"
                 >
-                    <i className="fa-solid fa-xmark text-xl" aria-hidden="true"></i>
+                    <i className="fa-solid fa-xmark text-base sm:text-xl" aria-hidden="true"></i>
                 </button>
 
-                <div className="border-b border-slate-200 bg-white px-6 py-5 sm:px-8">
+                <div className="border-b border-slate-200 bg-white px-5 py-4 sm:px-8 sm:py-5">
                     <div className="flex flex-col gap-3 pr-12 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-teal-500">
+                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-teal-500 sm:text-sm sm:tracking-[0.24em]">
                                 History Calendar
                             </p>
                             
@@ -234,9 +234,9 @@ const CalendarHistoryModal = ({
                     </div>
                 </div>
 
-                <div className="grid flex-1 grid-cols-1 gap-6 overflow-y-auto p-6 sm:p-8 xl:grid-cols-[1.15fr_0.85fr]">
-                    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-                        <div className="mb-5 flex items-center justify-between gap-3">
+                <div className="grid flex-1 grid-cols-1 gap-4 overflow-y-auto p-4 sm:gap-6 sm:p-8 xl:grid-cols-[1.15fr_0.85fr]">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+                        <div className="mb-4 flex items-center justify-between gap-3 sm:mb-5">
                             <button
                                 type="button"
                                 onClick={() =>
@@ -244,19 +244,19 @@ const CalendarHistoryModal = ({
                                         new Date(activeMonth.getFullYear(), activeMonth.getMonth() - 1, 1)
                                     )
                                 }
-                                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition-colors hover:bg-slate-100"
+                                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-sm text-slate-600 transition-colors hover:bg-slate-100 sm:h-11 sm:w-11 sm:text-base"
                             >
                                 <i className="fa-solid fa-chevron-left" aria-hidden="true"></i>
                             </button>
 
                             <div className="text-center">
-                                <h3 className="text-xl font-semibold text-slate-900">
+                                <h3 className="text-lg font-semibold text-slate-900 sm:text-xl">
                                     {activeMonth.toLocaleDateString(undefined, {
                                         month: "long",
                                         year: "numeric",
                                     })}
                                 </h3>
-                                <p className="text-sm text-slate-500">Past days only</p>
+                                <p className="text-xs text-slate-500 sm:text-sm">Past days only</p>
                             </div>
 
                             <button
@@ -267,24 +267,24 @@ const CalendarHistoryModal = ({
                                     )
                                 }
                                 disabled={!canGoNextMonth}
-                                className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+                                className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-sm text-slate-600 transition-colors hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40 sm:h-11 sm:w-11 sm:text-base"
                             >
                                 <i className="fa-solid fa-chevron-right" aria-hidden="true"></i>
                             </button>
                         </div>
 
-                        <div className="mb-3 grid grid-cols-7 gap-2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        <div className="mb-2 grid grid-cols-7 gap-1.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 sm:mb-3 sm:gap-2 sm:text-xs sm:tracking-[0.2em]">
                             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                                <div key={day} className="py-2">
+                                <div key={day} className="py-1.5 sm:py-2">
                                     {day}
                                 </div>
                             ))}
                         </div>
 
-                        <div className="grid grid-cols-7 gap-2">
+                        <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
                             {monthDays.map((date, index) => {
                                 if (!date) {
-                                    return <div key={`empty-${index}`} className="aspect-square rounded-2xl bg-transparent"></div>;
+                                    return <div key={`empty-${index}`} className="aspect-square rounded-xl bg-transparent sm:rounded-2xl"></div>;
                                 }
 
                                 const dateKey = getDateKey(date);
@@ -309,7 +309,7 @@ const CalendarHistoryModal = ({
                                             setSelectedDate(date);
                                             setActiveBucket("all");
                                         }}
-                                        className={`relative aspect-square overflow-hidden rounded-2xl border p-2 text-left transition-all ${
+                                        className={`relative aspect-square overflow-hidden rounded-xl border p-1 text-left transition-all sm:rounded-2xl sm:p-2 ${
                                             isSelected
                                                 ? "border-teal-400 bg-teal-50 shadow-sm"
                                                 : "border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-white"
@@ -323,22 +323,22 @@ const CalendarHistoryModal = ({
 
                                         <div className="relative z-10 flex h-full flex-col justify-between">
                                             <div className="flex items-start justify-between">
-                                            <span className="text-sm font-semibold text-slate-900">
+                                                <span className="text-xs font-semibold text-slate-900 sm:text-sm">
                                                 {date.getDate()}
                                             </span>
                                             {mood && moodMeta[mood] && (
-                                                <span className={`flex h-7 w-7 items-center justify-center rounded-full text-xs ${moodMeta[mood].badgeClass}`}>
+                                                <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] sm:h-7 sm:w-7 sm:text-xs ${moodMeta[mood].badgeClass}`}>
                                                     <i className={moodMeta[mood].iconClass} aria-hidden="true"></i>
                                                 </span>
                                             )}
                                             </div>
 
-                                            <div className="mt-3 flex items-end justify-between gap-2">
-                                                <span className="rounded-full bg-white/80 px-2 py-1 text-[11px] font-semibold text-slate-600 backdrop-blur-sm">
+                                            <div className="mt-2 flex items-end justify-between gap-1 sm:mt-3 sm:gap-2">
+                                                <span className="rounded-full bg-white/80 px-1.5 py-0.5 text-[9px] font-semibold text-slate-600 backdrop-blur-sm sm:px-2 sm:py-1 sm:text-[11px]">
                                                     {stats.completion}%
                                                 </span>
                                                 {stats.total > 0 && (
-                                                    <span className="text-[11px] font-medium text-slate-500">
+                                                    <span className="text-[9px] font-medium text-slate-500 sm:text-[11px]">
                                                         {stats.done}/{stats.total}
                                                     </span>
                                                 )}
@@ -350,23 +350,23 @@ const CalendarHistoryModal = ({
                         </div>
                     </div>
 
-                    <div className="flex min-h-0 flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-                        <div className="border-b border-slate-200 pb-5">
-                            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">
+                    <div className="flex min-h-0 flex-col rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+                        <div className="border-b border-slate-200 pb-4 sm:pb-5">
+                            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 sm:text-sm sm:tracking-[0.2em]">
                                 Selected Day
                             </p>
-                            <h3 className="mt-2 text-2xl font-bold text-slate-900">
+                            <h3 className="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
                                 {formatLongDate(selectedDate)}
                             </h3>
 
-                            <div className="mt-4 flex flex-wrap items-center gap-3">
+                            <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-4 sm:gap-3">
                                 {selectedDayMood && moodMeta[selectedDayMood] ? (
-                                    <span className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${moodMeta[selectedDayMood].badgeClass}`}>
+                                    <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium sm:px-4 sm:py-2 sm:text-sm ${moodMeta[selectedDayMood].badgeClass}`}>
                                         <i className={moodMeta[selectedDayMood].iconClass} aria-hidden="true"></i>
                                         Mood: {moodMeta[selectedDayMood].label}
                                     </span>
                                 ) : (
-                                    <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-500">
+                                    <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-500 sm:px-4 sm:py-2 sm:text-sm">
                                         <i className="fa-regular fa-face-meh" aria-hidden="true"></i>
                                         No mood saved
                                     </span>
@@ -374,7 +374,7 @@ const CalendarHistoryModal = ({
                             </div>
                         </div>
 
-                        <div className="mt-5 flex flex-wrap gap-3">
+                        <div className="mt-4 flex flex-wrap gap-2 sm:mt-5 sm:gap-3">
                             {[
                                 { id: "all", label: "All", count: selectedDayGroups.all.length },
                                 { id: "done", label: "Done", count: selectedDayGroups.done.length },
@@ -385,23 +385,23 @@ const CalendarHistoryModal = ({
                                     key={item.id}
                                     type="button"
                                     onClick={() => setActiveBucket(item.id)}
-                                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors sm:gap-2 sm:px-4 sm:py-2 sm:text-sm ${
                                         activeBucket === item.id
                                             ? "bg-slate-900 text-white"
                                             : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                                     }`}
                                 >
                                     {item.label}
-                                    <span className={`rounded-full px-2 py-0.5 text-xs ${activeBucket === item.id ? "bg-white/15" : "bg-white text-slate-500"}`}>
+                                    <span className={`rounded-full px-2 py-0.5 text-[10px] sm:text-xs ${activeBucket === item.id ? "bg-white/15" : "bg-white text-slate-500"}`}>
                                         {item.count}
                                     </span>
                                 </button>
                             ))}
                         </div>
 
-                        <div className="mt-5 flex-1 overflow-y-auto pr-1">
+                        <div className="mt-4 flex-1 overflow-y-auto pr-1 sm:mt-5">
                             {loading ? (
-                                <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center text-slate-500">
+                                <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-xs text-slate-500 sm:px-6 sm:py-10 sm:text-base">
                                     Loading calendar history...
                                 </div>
                             ) : visibleTasks.length > 0 ? (
@@ -411,7 +411,7 @@ const CalendarHistoryModal = ({
                                     ))}
                                 </div>
                             ) : (
-                                <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center text-slate-500">
+                                <div className="rounded-3xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-xs text-slate-500 sm:px-6 sm:py-10 sm:text-base">
                                     No tasks match this day and filter.
                                 </div>
                             )}
