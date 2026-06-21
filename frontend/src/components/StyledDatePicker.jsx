@@ -51,6 +51,7 @@ const getMonthDays = (viewDate) => {
 const StyledDatePicker = ({
     value,
     onChange,
+    onOpenChange,
     className = "",
     placeholder = "mm/dd/yyyy",
     popoverClassName = "",
@@ -59,6 +60,11 @@ const StyledDatePicker = ({
     const [isOpen, setIsOpen] = useState(false);
     const [viewDate, setViewDate] = useState(() => selectedDate || new Date());
     const pickerRef = useRef(null);
+
+    const updateOpenState = (nextOpen) => {
+        setIsOpen(nextOpen);
+        onOpenChange?.(nextOpen);
+    };
 
     useEffect(() => {
         if (selectedDate) {
@@ -69,7 +75,7 @@ const StyledDatePicker = ({
     useEffect(() => {
         const handleOutsideClick = (event) => {
             if (pickerRef.current && !pickerRef.current.contains(event.target)) {
-                setIsOpen(false);
+                updateOpenState(false);
             }
         };
 
@@ -94,26 +100,26 @@ const StyledDatePicker = ({
     const selectDate = (date) => {
         onChange(formatDateValue(date));
         setViewDate(date);
-        setIsOpen(false);
+        updateOpenState(false);
     };
 
     const selectToday = () => {
         const today = new Date();
         onChange(formatDateValue(today));
         setViewDate(today);
-        setIsOpen(false);
+        updateOpenState(false);
     };
 
     const clearDate = () => {
         onChange("");
-        setIsOpen(false);
+        updateOpenState(false);
     };
 
     return (
         <div ref={pickerRef} className={`relative ${isOpen ? "z-50" : "z-0"} ${className}`}>
             <button
                 type="button"
-                onClick={() => setIsOpen((current) => !current)}
+                onClick={() => updateOpenState(!isOpen)}
                 className={`flex w-full items-center justify-between gap-3 rounded-xl border bg-white px-4 py-3 text-left text-sm font-semibold shadow-sm outline-none transition-colors sm:text-lg ${
                     isOpen
                         ? "border-teal-300 ring-2 ring-teal-100"

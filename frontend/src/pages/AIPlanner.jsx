@@ -21,6 +21,7 @@ const AIPlanner = () => {
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [openPriorityIndex, setOpenPriorityIndex] = useState(null);
+    const [openDatePickerIndex, setOpenDatePickerIndex] = useState(null);
 
     const generatePlan = async () => {
         if (!goal.trim()) {
@@ -83,6 +84,7 @@ const AIPlanner = () => {
                 setTasks([]);
                 setGoal("");
                 setOpenPriorityIndex(null);
+                setOpenDatePickerIndex(null);
             } else {
                 toast.error(data.message);
             }
@@ -188,7 +190,9 @@ const AIPlanner = () => {
                             {tasks.map((task, index) => (
                                 <div
                                     key={index}
-                                    className="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_18px_45px_rgba(15,23,42,0.09)] sm:p-5"
+                                    className={`group relative rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_18px_45px_rgba(15,23,42,0.09)] sm:p-5 ${
+                                        openDatePickerIndex === index ? "z-50" : "z-0"
+                                    }`}
                                 >
                                     <div className="mb-5 flex flex-col gap-3 border-b border-gray-100 pb-4 sm:flex-row sm:items-start sm:justify-between">
                                         <div className="flex items-center gap-3">
@@ -288,6 +292,12 @@ const AIPlanner = () => {
                                                 onChange={(value) =>
                                                     updateTask(index, "dueDate", value)
                                                 }
+                                                onOpenChange={(isOpen) => {
+                                                    setOpenDatePickerIndex(isOpen ? index : null);
+                                                    if (isOpen) {
+                                                        setOpenPriorityIndex(null);
+                                                    }
+                                                }}
                                                 className="mt-2"
                                                 popoverClassName="xl:right-0 xl:left-auto xl:translate-x-0"
                                             />
