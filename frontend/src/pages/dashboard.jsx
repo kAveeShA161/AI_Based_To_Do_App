@@ -259,7 +259,7 @@ const Dashboard = () => {
                         </p>
                     </div>
 
-                    <div className="mt-5 grid grid-cols-3 gap-1.5 overflow-x-auto pb-1 sm:mt-6 sm:gap-3">
+                    <div className="mt-5 grid grid-cols-3 gap-1.5 overflow-x-auto px-0.5 py-1 sm:mt-6 sm:gap-3 sm:px-0 sm:py-0 sm:pb-1">
                         {moodOptions.map((mood) => {
                             const isActive = mood.id === selectedMood;
 
@@ -268,13 +268,13 @@ const Dashboard = () => {
                                     key={mood.id}
                                     type="button"
                                     onClick={() => handleMoodSelect(mood.id)}
-                                    className={`min-w-[96px] rounded-2xl border px-1.5 py-2.5 text-center transition-all duration-200 sm:min-w-0 sm:px-4 sm:py-5 ${isActive
+                                    className={`min-w-[96px] rounded-2xl border px-1.5 py-3 text-center transition-all duration-200 sm:min-w-0 sm:px-4 sm:py-5 ${isActive
                                         ? `${mood.bg} ${mood.text} border-transparent ring-2 ${mood.ring} shadow-md`
                                         : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:shadow-sm"
                                         }`}
                                 >
                                     <div
-                                        className={`mx-auto flex h-8 w-8 items-center justify-center rounded-full text-lg sm:h-14 sm:w-14 sm:text-3xl ${isActive
+                                        className={`mx-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-base leading-none sm:h-14 sm:w-14 sm:text-3xl ${isActive
                                             ? `bg-gradient-to-br ${mood.accent} text-white shadow-sm`
                                             : "bg-gray-100"
                                             }`}
