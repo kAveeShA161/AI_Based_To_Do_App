@@ -24,9 +24,9 @@
 
 .taskflow-toast-body {
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  font-size: 12px;
+  gap: 7px;
+  padding: 9px 11px;
+  font-size: 10px;
   font-weight: 500;
   line-height: 1.3;
 }
