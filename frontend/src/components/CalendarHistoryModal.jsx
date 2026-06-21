@@ -333,7 +333,7 @@ const CalendarHistoryModal = ({
 
                                         <div className="relative z-10 flex h-full flex-col justify-between">
                                             <div className="flex items-start justify-between">
-                                                <span className="text-[10px] font-semibold leading-none text-slate-900 sm:text-sm sm:leading-normal">
+                                            <span className="pl-1 text-[10px] font-semibold leading-none text-slate-900 sm:pl-0 sm:text-sm sm:leading-normal">
                                                 {date.getDate()}
                                             </span>
                                             {mood && moodMeta[mood] && (
