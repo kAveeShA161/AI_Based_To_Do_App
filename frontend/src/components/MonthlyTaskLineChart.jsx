@@ -318,7 +318,7 @@ const MonthlyTaskLineChart = ({ tasks = [] }) => {
                         )}
                     </div>
 
-                    <div className="absolute inset-x-7 bottom-0 h-6 text-[9px] text-slate-500 sm:inset-x-10 sm:text-[11px]">
+                    <div className="absolute inset-x-7 bottom-0 h-6 text-[7px] text-slate-500 sm:inset-x-10 sm:text-[9px]">
                         {chartData.map((point, index) => {
                             const { left } = getPointPosition(point, index, activeKeys[0] || "done");
 
