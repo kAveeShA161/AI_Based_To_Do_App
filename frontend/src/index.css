@@ -5,3 +5,65 @@
 *{
   font-family: "Outfit", sans-serif;
 }
+
+.Toastify__toast-container {
+  width: min(380px, calc(100vw - 32px));
+}
+
+.taskflow-toast {
+  min-height: 54px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #111827;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+}
+
+.taskflow-toast-body {
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.taskflow-toast .Toastify__toast-icon {
+  width: 18px;
+  margin-inline-end: 2px;
+}
+
+.taskflow-toast .Toastify__close-button {
+  align-self: center;
+  color: #64748b;
+  opacity: 0.8;
+  transition: opacity 160ms ease, color 160ms ease;
+}
+
+.taskflow-toast .Toastify__close-button:hover {
+  color: #111827;
+  opacity: 1;
+}
+
+.taskflow-toast-progress {
+  height: 3px;
+}
+
+.Toastify__toast--success .taskflow-toast-progress {
+  background: linear-gradient(90deg, #10b981, #22c55e);
+}
+
+.Toastify__toast--error .taskflow-toast-progress {
+  background: linear-gradient(90deg, #ef4444, #f97316);
+}
+
+.Toastify__toast--info .taskflow-toast-progress {
+  background: linear-gradient(90deg, #06b6d4, #3b82f6);
+}
+
+.Toastify__toast--warning .taskflow-toast-progress {
+  background: linear-gradient(90deg, #f59e0b, #eab308);
+}

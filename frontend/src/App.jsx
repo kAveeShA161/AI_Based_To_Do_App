@@ -5,7 +5,7 @@ import Login from './pages/Login'
 import EmailVerify from './pages/EmailVerify'
 import ResetPassword from './pages/ResetPassword'
 import Register from './pages/Register'
-import { ToastContainer } from 'react-toastify';
+import { Slide, ToastContainer } from 'react-toastify';
 import CreateTask from './pages/createTask'
 import MyTasks from './pages/MyTasks'
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,7 +16,20 @@ import AIPlanner from './pages/AIPlanner';
 const App = () => {
   return (
     <div className='text-4xl'>
-      <ToastContainer toastClassName="text-2xl" />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3200}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        transition={Slide}
+        toastClassName="taskflow-toast"
+        bodyClassName="taskflow-toast-body"
+        progressClassName="taskflow-toast-progress"
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
