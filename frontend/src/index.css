@@ -6,6 +6,16 @@
   font-family: "Outfit", sans-serif;
 }
 
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
 .Toastify__toast-container {
   width: min(380px, calc(100vw - 32px));
 }
