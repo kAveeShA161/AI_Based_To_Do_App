@@ -309,7 +309,7 @@ const CalendarHistoryModal = ({
                                             setSelectedDate(date);
                                             setActiveBucket("all");
                                         }}
-                                        className={`relative aspect-square overflow-hidden rounded-xl border p-1 text-left transition-all sm:rounded-2xl sm:p-2 ${
+                                        className={`relative aspect-square overflow-hidden rounded-xl border p-0.5 text-left transition-all sm:rounded-2xl sm:p-2 ${
                                             isSelected
                                                 ? "border-teal-400 bg-teal-50 shadow-sm"
                                                 : "border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-white"
@@ -323,22 +323,22 @@ const CalendarHistoryModal = ({
 
                                         <div className="relative z-10 flex h-full flex-col justify-between">
                                             <div className="flex items-start justify-between">
-                                                <span className="text-xs font-semibold text-slate-900 sm:text-sm">
+                                                <span className="text-[10px] font-semibold leading-none text-slate-900 sm:text-sm sm:leading-normal">
                                                 {date.getDate()}
                                             </span>
                                             {mood && moodMeta[mood] && (
-                                                <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] sm:h-7 sm:w-7 sm:text-xs ${moodMeta[mood].badgeClass}`}>
+                                                <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[7px] sm:h-7 sm:w-7 sm:text-xs ${moodMeta[mood].badgeClass}`}>
                                                     <i className={moodMeta[mood].iconClass} aria-hidden="true"></i>
                                                 </span>
                                             )}
                                             </div>
 
-                                            <div className="mt-2 flex items-end justify-between gap-1 sm:mt-3 sm:gap-2">
-                                                <span className="rounded-full bg-white/80 px-1.5 py-0.5 text-[9px] font-semibold text-slate-600 backdrop-blur-sm sm:px-2 sm:py-1 sm:text-[11px]">
+                                            <div className="mt-1 flex items-end justify-between gap-0.5 sm:mt-3 sm:gap-2">
+                                                <span className="rounded-full bg-white/80 px-1 py-0.5 text-[7px] font-semibold leading-none text-slate-600 backdrop-blur-sm sm:px-2 sm:py-1 sm:text-[11px] sm:leading-normal">
                                                     {stats.completion}%
                                                 </span>
                                                 {stats.total > 0 && (
-                                                    <span className="text-[9px] font-medium text-slate-500 sm:text-[11px]">
+                                                    <span className="text-[7px] font-medium leading-none text-slate-500 sm:text-[11px] sm:leading-normal">
                                                         {stats.done}/{stats.total}
                                                     </span>
                                                 )}
