@@ -221,14 +221,46 @@ const MyTasks = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
 
-                    <select
-                        value={sortBy}
-                        onChange={(e) => setSortBy(e.target.value)}
-                        className="hidden w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer sm:block sm:text-xl xl:w-80"
-                    >
-                        <option value="dueDate">Sort by Due Date</option>
-                        <option value="priority">Sort by Difficulty</option>
-                    </select>
+                    <div className="relative hidden w-full sm:block xl:w-80">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setSortMenuOpen((current) => !current);
+                                setFilterMenuOpen(false);
+                            }}
+                            className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 text-left text-xl font-medium text-gray-700 shadow-sm outline-none transition-colors hover:border-red-200 hover:bg-red-50/30 focus:border-red-300 focus:ring-2 focus:ring-red-100"
+                        >
+                            <span>
+                                {sortBy === "dueDate" ? "Sort by Due Date" : "Sort by Difficulty"}
+                            </span>
+                            <i className={`fa-solid fa-chevron-down ml-2 text-sm transition-transform ${sortMenuOpen ? "rotate-180" : ""}`} aria-hidden="true"></i>
+                        </button>
+
+                        {sortMenuOpen && (
+                            <div className="absolute left-0 top-full z-30 mt-2 w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
+                                {[
+                                    { label: "Sort by Due Date", value: "dueDate" },
+                                    { label: "Sort by Difficulty", value: "priority" },
+                                ].map((option) => (
+                                    <button
+                                        key={option.value}
+                                        type="button"
+                                        onClick={() => {
+                                            setSortBy(option.value);
+                                            setSortMenuOpen(false);
+                                        }}
+                                        className={`flex w-full items-center rounded-xl px-3 py-2.5 text-left text-lg transition-colors ${
+                                            sortBy === option.value
+                                                ? "bg-red-400 text-white"
+                                                : "text-gray-600 hover:bg-gray-50"
+                                        }`}
+                                    >
+                                        {option.label}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
 
                     <div className="grid grid-cols-2 gap-3 sm:hidden">
                         <div className="relative">

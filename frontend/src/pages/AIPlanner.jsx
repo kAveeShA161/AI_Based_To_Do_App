@@ -20,6 +20,7 @@ const AIPlanner = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [openPriorityIndex, setOpenPriorityIndex] = useState(null);
 
     const generatePlan = async () => {
         if (!goal.trim()) {
@@ -81,6 +82,7 @@ const AIPlanner = () => {
                 toast.success("Tasks saved successfully!");
                 setTasks([]);
                 setGoal("");
+                setOpenPriorityIndex(null);
             } else {
                 toast.error(data.message);
             }
@@ -239,17 +241,42 @@ const AIPlanner = () => {
                                             <label className="text-sm font-medium text-gray-700 sm:text-lg">
                                                 Difficulty
                                             </label>
-                                            <select
-                                                className="mt-2 w-full cursor-pointer rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
-                                                value={task.priority}
-                                                onChange={(e) =>
-                                                    updateTask(index, "priority", e.target.value)
-                                                }
-                                            >
-                                                <option>High</option>
-                                                <option>Medium</option>
-                                                <option>Low</option>
-                                            </select>
+                                            <div className="relative mt-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setOpenPriorityIndex((current) =>
+                                                            current === index ? null : index
+                                                        )
+                                                    }
+                                                    className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-left text-sm font-medium text-gray-700 shadow-sm outline-none transition-colors hover:border-red-200 hover:bg-red-50/30 focus:border-red-300 focus:bg-white focus:ring-2 focus:ring-red-100 sm:text-lg"
+                                                >
+                                                    <span>{task.priority}</span>
+                                                    <i className={`fa-solid fa-chevron-down ml-2 text-xs transition-transform ${openPriorityIndex === index ? "rotate-180" : ""}`} aria-hidden="true"></i>
+                                                </button>
+
+                                                {openPriorityIndex === index && (
+                                                    <div className="absolute left-0 top-full z-30 mt-2 w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
+                                                        {["High", "Medium", "Low"].map((level) => (
+                                                            <button
+                                                                key={level}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    updateTask(index, "priority", level);
+                                                                    setOpenPriorityIndex(null);
+                                                                }}
+                                                                className={`flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm transition-colors sm:text-base ${
+                                                                    task.priority === level
+                                                                        ? "bg-red-400 text-white"
+                                                                        : "text-gray-600 hover:bg-gray-50"
+                                                                }`}
+                                                            >
+                                                                {level}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="min-w-0">
