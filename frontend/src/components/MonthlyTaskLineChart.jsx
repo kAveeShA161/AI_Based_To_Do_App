@@ -193,10 +193,7 @@ const MonthlyTaskLineChart = ({ tasks = [] }) => {
         <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                 <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400 sm:text-sm sm:tracking-[0.22em]">
-                        Monthly Stats
-                    </p>
-                    <h2 className="mt-1 text-lg font-bold leading-snug text-slate-900 sm:text-2xl">
+                    <h2 className="text-lg font-bold leading-snug text-slate-900 sm:text-2xl">
                         Daily task trend for the selected month
                     </h2>
                     <p className="mt-2 text-xs leading-5 text-slate-500 sm:text-sm">
