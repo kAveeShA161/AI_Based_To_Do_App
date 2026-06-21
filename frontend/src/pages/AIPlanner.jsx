@@ -181,13 +181,13 @@ const AIPlanner = () => {
                             </button>
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 xl:gap-6">
+                        <div className="space-y-5">
                             {tasks.map((task, index) => (
                                 <div
                                     key={index}
-                                    className="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_18px_45px_rgba(15,23,42,0.09)] sm:p-6"
+                                    className="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_18px_45px_rgba(15,23,42,0.09)] sm:p-5"
                                 >
-                                    <div className="mb-5 flex flex-col gap-3 border-b border-gray-100 pb-5 sm:flex-row sm:items-start sm:justify-between">
+                                    <div className="mb-5 flex flex-col gap-3 border-b border-gray-100 pb-4 sm:flex-row sm:items-start sm:justify-between">
                                         <div className="flex items-center gap-3">
                                             <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-sm font-bold text-black shadow-inner">
                                                 {index + 1}
@@ -209,8 +209,8 @@ const AIPlanner = () => {
                                         </span>
                                     </div>
 
-                                    <div className="space-y-4">
-                                        <div>
+                                    <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_1.35fr_0.7fr_0.7fr_0.7fr] xl:items-start">
+                                        <div className="min-w-0">
                                             <label className="text-base font-medium text-gray-700 sm:text-lg">
                                                 Task Title
                                             </label>
@@ -223,12 +223,12 @@ const AIPlanner = () => {
                                             />
                                         </div>
 
-                                        <div>
+                                        <div className="min-w-0">
                                             <label className="text-base font-medium text-gray-700 sm:text-lg">
                                                 Description
                                             </label>
                                             <textarea
-                                                className="mt-2 h-28 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
+                                                className="mt-2 h-28 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg xl:h-[52px]"
                                                 placeholder="Add optional notes for this task"
                                                 value={task.description}
                                                 onChange={(e) =>
@@ -237,51 +237,49 @@ const AIPlanner = () => {
                                             />
                                         </div>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                            <div>
-                                                <label className="text-base font-medium text-gray-700 sm:text-lg">
-                                                    Difficulty Level
-                                                </label>
-                                                <select
-                                                    className="mt-2 w-full cursor-pointer rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
-                                                    value={task.priority}
-                                                    onChange={(e) =>
-                                                        updateTask(index, "priority", e.target.value)
-                                                    }
-                                                >
-                                                    <option>High</option>
-                                                    <option>Medium</option>
-                                                    <option>Low</option>
-                                                </select>
-                                            </div>
+                                        <div className="min-w-0">
+                                            <label className="text-base font-medium text-gray-700 sm:text-lg">
+                                                Difficulty
+                                            </label>
+                                            <select
+                                                className="mt-2 w-full cursor-pointer rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
+                                                value={task.priority}
+                                                onChange={(e) =>
+                                                    updateTask(index, "priority", e.target.value)
+                                                }
+                                            >
+                                                <option>High</option>
+                                                <option>Medium</option>
+                                                <option>Low</option>
+                                            </select>
+                                        </div>
 
-                                            <div>
-                                                <label className="text-base font-medium text-gray-700 sm:text-lg">
-                                                    Due Date
-                                                </label>
-                                                <input
-                                                    type="date"
-                                                    className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
-                                                    value={task.dueDate}
-                                                    onChange={(e) =>
-                                                        updateTask(index, "dueDate", e.target.value)
-                                                    }
-                                                />
-                                            </div>
+                                        <div className="min-w-0">
+                                            <label className="text-base font-medium text-gray-700 sm:text-lg">
+                                                Due Date
+                                            </label>
+                                            <input
+                                                type="date"
+                                                className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
+                                                value={task.dueDate}
+                                                onChange={(e) =>
+                                                    updateTask(index, "dueDate", e.target.value)
+                                                }
+                                            />
+                                        </div>
 
-                                            <div>
-                                                <label className="text-base font-medium text-gray-700 sm:text-lg">
-                                                    Category
-                                                </label>
-                                                <input
-                                                    className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
-                                                    placeholder="Work, Personal, Study..."
-                                                    value={task.category}
-                                                    onChange={(e) =>
-                                                        updateTask(index, "category", e.target.value)
-                                                    }
-                                                />
-                                            </div>
+                                        <div className="min-w-0">
+                                            <label className="text-base font-medium text-gray-700 sm:text-lg">
+                                                Category
+                                            </label>
+                                            <input
+                                                className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
+                                                placeholder="General"
+                                                value={task.category}
+                                                onChange={(e) =>
+                                                    updateTask(index, "category", e.target.value)
+                                                }
+                                            />
                                         </div>
                                     </div>
                                 </div>
