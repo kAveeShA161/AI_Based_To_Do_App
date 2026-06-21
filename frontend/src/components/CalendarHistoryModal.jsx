@@ -283,7 +283,7 @@ const CalendarHistoryModal = ({
                             </button>
                         </div>
 
-                        <div className="mx-auto mb-2 grid w-[96%] grid-cols-7 gap-1.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 sm:mb-3 sm:w-full sm:gap-2 sm:text-xs sm:tracking-[0.2em]">
+                        <div className="ml-[5%] mr-auto mb-2 grid w-[94%] grid-cols-7 gap-1.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 sm:mx-0 sm:mb-3 sm:w-full sm:gap-2 sm:text-xs sm:tracking-[0.2em]">
                             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                                 <div key={day} className="py-1.5 sm:py-2">
                                     {day}
@@ -291,7 +291,7 @@ const CalendarHistoryModal = ({
                             ))}
                         </div>
 
-                        <div className="mx-auto grid w-[96%] grid-cols-7 gap-1.5 sm:w-full sm:gap-2">
+                        <div className="ml-[5%] mr-auto grid w-[94%] grid-cols-7 gap-1.5 sm:mx-0 sm:w-full sm:gap-2">
                             {monthDays.map((date, index) => {
                                 if (!date) {
                                     return <div key={`empty-${index}`} className="aspect-square rounded-xl bg-transparent sm:rounded-2xl"></div>;
