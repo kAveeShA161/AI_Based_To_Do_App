@@ -235,7 +235,7 @@ const CalendarHistoryModal = ({
                 </div>
 
                 <div className="grid flex-1 grid-cols-1 gap-4 overflow-y-auto p-4 sm:gap-6 sm:p-8 xl:grid-cols-[1.15fr_0.85fr]">
-                    <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+                    <div className="rounded-3xl border border-slate-200 bg-white px-5 py-4 shadow-sm sm:p-6">
                         <div className="mb-4 flex items-center justify-between gap-3 sm:mb-5">
                             <button
                                 type="button"
@@ -273,7 +273,7 @@ const CalendarHistoryModal = ({
                             </button>
                         </div>
 
-                        <div className="mb-2 grid grid-cols-7 gap-1.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 sm:mb-3 sm:gap-2 sm:text-xs sm:tracking-[0.2em]">
+                        <div className="mx-auto mb-2 grid w-[96%] grid-cols-7 gap-1.5 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400 sm:mb-3 sm:w-full sm:gap-2 sm:text-xs sm:tracking-[0.2em]">
                             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                                 <div key={day} className="py-1.5 sm:py-2">
                                     {day}
@@ -281,7 +281,7 @@ const CalendarHistoryModal = ({
                             ))}
                         </div>
 
-                        <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+                        <div className="mx-auto grid w-[96%] grid-cols-7 gap-1.5 sm:w-full sm:gap-2">
                             {monthDays.map((date, index) => {
                                 if (!date) {
                                     return <div key={`empty-${index}`} className="aspect-square rounded-xl bg-transparent sm:rounded-2xl"></div>;
