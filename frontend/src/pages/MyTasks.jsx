@@ -223,58 +223,72 @@ const MyTasks = () => {
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer sm:text-xl xl:w-80"
+                        className="hidden w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer sm:block sm:text-xl xl:w-80"
                     >
                         <option value="dueDate">Sort by Due Date</option>
                         <option value="priority">Sort by Difficulty</option>
                     </select>
-                </div>
 
-                <div className="relative mb-8 sm:hidden">
-                    <button
-                        type="button"
-                        onClick={() => setFilterMenuOpen((current) => !current)}
-                        className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm"
-                    >
-                        <span>Filter by: {filter}</span>
-                        <i className={`fa-solid fa-chevron-down text-xs transition-transform ${filterMenuOpen ? "rotate-180" : ""}`} aria-hidden="true"></i>
-                    </button>
-
-                    {filterMenuOpen && (
-                        <div className="absolute left-0 right-0 top-14 z-20 overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
-                            {[
-                                { name: "All Tasks", count: tasks.length, color: "bg-red-400 text-white" },
-                                { name: "Today", count: getCount("Today"), icon: "fa-regular fa-calendar" },
-                                { name: "Upcoming", count: getCount("Upcoming"), icon: "fa-regular fa-clock" },
-                                { name: "Completed", count: getCount("Completed"), icon: "fa-regular fa-circle-check" },
-                                { name: "High Difficulty", count: getCount("High Difficulty"), icon: "fa-solid fa-circle-exclamation" },
-                                { name: "Medium Difficulty", count: getCount("Medium Difficulty"), icon: "fa-solid fa-circle-exclamation" },
-                                { name: "Low Difficulty", count: getCount("Low Difficulty"), icon: "fa-solid fa-circle-exclamation" },
-                            ].map((f) => (
-                                <button
-                                    key={f.name}
-                                    type="button"
-                                    onClick={() => {
-                                        setFilter(f.name);
-                                        setFilterMenuOpen(false);
-                                    }}
-                                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${
-                                        filter === f.name
-                                            ? "bg-red-400 text-white"
-                                            : "text-gray-600 hover:bg-gray-50"
-                                    }`}
-                                >
-                                    <span className="flex items-center gap-2">
-                                        {f.icon && <i className={f.icon} aria-hidden="true"></i>}
-                                        {f.name}
-                                    </span>
-                                    <span className={`text-[10px] px-2 py-0.5 rounded-full ${filter === f.name ? "bg-white/20" : "bg-gray-100"}`}>
-                                        {f.count}
-                                    </span>
-                                </button>
-                            ))}
+                    <div className="grid grid-cols-2 gap-3 sm:hidden">
+                        <div className="relative">
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="h-full w-full appearance-none rounded-xl border border-gray-200 bg-white px-3 py-3 pr-8 text-left text-xs font-medium text-gray-700 shadow-sm outline-none"
+                            >
+                                <option value="dueDate">Sort by Due Date</option>
+                                <option value="priority">Sort by Difficulty</option>
+                            </select>
+                            <i className="fa-solid fa-chevron-down pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-700" aria-hidden="true"></i>
                         </div>
-                    )}
+
+                        <div className="relative">
+                            <button
+                                type="button"
+                                onClick={() => setFilterMenuOpen((current) => !current)}
+                                className="flex h-full w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-3 py-3 text-xs font-medium text-gray-700 shadow-sm"
+                            >
+                                <span className="truncate">Filter by: {filter}</span>
+                                <i className={`fa-solid fa-chevron-down ml-2 text-[10px] transition-transform ${filterMenuOpen ? "rotate-180" : ""}`} aria-hidden="true"></i>
+                            </button>
+
+                            {filterMenuOpen && (
+                                <div className="absolute right-0 top-12 z-20 w-56 overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
+                                    {[
+                                        { name: "All Tasks", count: tasks.length, color: "bg-red-400 text-white" },
+                                        { name: "Today", count: getCount("Today"), icon: "fa-regular fa-calendar" },
+                                        { name: "Upcoming", count: getCount("Upcoming"), icon: "fa-regular fa-clock" },
+                                        { name: "Completed", count: getCount("Completed"), icon: "fa-regular fa-circle-check" },
+                                        { name: "High Difficulty", count: getCount("High Difficulty"), icon: "fa-solid fa-circle-exclamation" },
+                                        { name: "Medium Difficulty", count: getCount("Medium Difficulty"), icon: "fa-solid fa-circle-exclamation" },
+                                        { name: "Low Difficulty", count: getCount("Low Difficulty"), icon: "fa-solid fa-circle-exclamation" },
+                                    ].map((f) => (
+                                        <button
+                                            key={f.name}
+                                            type="button"
+                                            onClick={() => {
+                                                setFilter(f.name);
+                                                setFilterMenuOpen(false);
+                                            }}
+                                            className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-xs transition-colors ${
+                                                filter === f.name
+                                                    ? "bg-red-400 text-white"
+                                                    : "text-gray-600 hover:bg-gray-50"
+                                            }`}
+                                        >
+                                            <span className="flex items-center gap-2">
+                                                {f.icon && <i className={f.icon} aria-hidden="true"></i>}
+                                                {f.name}
+                                            </span>
+                                            <span className={`text-[10px] px-2 py-0.5 rounded-full ${filter === f.name ? "bg-white/20" : "bg-gray-100"}`}>
+                                                {f.count}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 <div className="mb-8 hidden flex-wrap gap-3 overflow-x-auto pb-2 text-xl sm:flex">
