@@ -362,7 +362,7 @@ const Dashboard = () => {
                                 <TaskCard key={task._id} task={task} onUpdate={handleUpdateTask} />
                             ))
                         ) : (
-                            <div className="rounded-xl bg-white p-8 text-center text-gray-500">
+                            <div className="rounded-xl bg-white p-8 text-center text-sm text-gray-500 sm:text-base">
                                 No tasks match the selected mood right now.
                             </div>
                         )}
