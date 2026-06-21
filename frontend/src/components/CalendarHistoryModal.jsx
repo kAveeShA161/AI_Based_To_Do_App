@@ -48,6 +48,7 @@ const CalendarHistoryModal = ({
     const [activeMonth, setActiveMonth] = useState(startOfMonth(today));
     const [selectedDate, setSelectedDate] = useState(initialDate || today);
     const [activeBucket, setActiveBucket] = useState("all");
+    const [filterMenuOpen, setFilterMenuOpen] = useState(false);
 
     useEffect(() => {
         if (!open) {
@@ -59,6 +60,7 @@ const CalendarHistoryModal = ({
         setSelectedDate(safeDate);
         setActiveMonth(startOfMonth(safeDate));
         setActiveBucket("all");
+        setFilterMenuOpen(false);
     }, [initialDate, open, today]);
 
     const moodMap = useMemo(() => {
@@ -205,6 +207,14 @@ const CalendarHistoryModal = ({
             month: "long",
             day: "numeric",
         });
+
+    const filterItems = [
+        { id: "all", label: "All", count: selectedDayGroups.all.length },
+        { id: "done", label: "Done", count: selectedDayGroups.done.length },
+        { id: "todo", label: "To Do", count: selectedDayGroups.todo.length },
+        { id: "overdue", label: "Overdue", count: selectedDayGroups.overdue.length },
+    ];
+    const activeFilter = filterItems.find((item) => item.id === activeBucket) || filterItems[0];
 
     if (!open) {
         return null;
@@ -359,7 +369,7 @@ const CalendarHistoryModal = ({
                                 {formatLongDate(selectedDate)}
                             </h3>
 
-                            <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-4 sm:gap-3">
+                            <div className="mt-3 flex flex-wrap items-center justify-between gap-2 sm:mt-4 sm:justify-start sm:gap-3">
                                 {selectedDayMood && moodMeta[selectedDayMood] ? (
                                     <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium sm:px-4 sm:py-2 sm:text-sm ${moodMeta[selectedDayMood].badgeClass}`}>
                                         <i className={moodMeta[selectedDayMood].iconClass} aria-hidden="true"></i>
@@ -371,16 +381,50 @@ const CalendarHistoryModal = ({
                                         No mood saved
                                     </span>
                                 )}
+
+                                <div className="relative sm:hidden">
+                                    <button
+                                        type="button"
+                                        onClick={() => setFilterMenuOpen((current) => !current)}
+                                        className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1.5 text-xs font-medium text-white shadow-sm"
+                                    >
+                                        Filter: {activeFilter.label}
+                                        <span className="rounded-full bg-white/15 px-1.5 py-0.5 text-[10px]">
+                                            {activeFilter.count}
+                                        </span>
+                                        <i className={`fa-solid fa-chevron-down text-[9px] transition-transform ${filterMenuOpen ? "rotate-180" : ""}`} aria-hidden="true"></i>
+                                    </button>
+
+                                    {filterMenuOpen && (
+                                        <div className="absolute right-0 top-full z-30 mt-2 w-36 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                                            {filterItems.map((item) => (
+                                                <button
+                                                    key={item.id}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setActiveBucket(item.id);
+                                                        setFilterMenuOpen(false);
+                                                    }}
+                                                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs font-medium transition-colors ${
+                                                        activeBucket === item.id
+                                                            ? "bg-slate-900 text-white"
+                                                            : "text-slate-600 hover:bg-slate-50"
+                                                    }`}
+                                                >
+                                                    <span>{item.label}</span>
+                                                    <span className={`rounded-full px-1.5 py-0.5 text-[10px] ${activeBucket === item.id ? "bg-white/15" : "bg-slate-100 text-slate-500"}`}>
+                                                        {item.count}
+                                                    </span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="mt-4 flex flex-wrap gap-2 sm:mt-5 sm:gap-3">
-                            {[
-                                { id: "all", label: "All", count: selectedDayGroups.all.length },
-                                { id: "done", label: "Done", count: selectedDayGroups.done.length },
-                                { id: "todo", label: "To Do", count: selectedDayGroups.todo.length },
-                                { id: "overdue", label: "Overdue", count: selectedDayGroups.overdue.length },
-                            ].map((item) => (
+                        <div className="mt-4 hidden flex-wrap gap-2 sm:mt-5 sm:flex sm:gap-3">
+                            {filterItems.map((item) => (
                                 <button
                                     key={item.id}
                                     type="button"
