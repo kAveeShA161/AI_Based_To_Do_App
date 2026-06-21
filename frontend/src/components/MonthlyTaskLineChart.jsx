@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 const seriesMeta = {
     done: {
@@ -20,6 +20,7 @@ const seriesMeta = {
 
 const CHART_TOP_PADDING = 4;
 const CHART_BOTTOM_PADDING = 2;
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const getDateAtMidnight = (value) => {
     const date = new Date(value);
@@ -40,12 +41,14 @@ const getYPosition = (value, maxValue) => {
 
 const MonthlyTaskLineChart = ({ tasks = [] }) => {
     const [selectedMonth, setSelectedMonth] = useState(() => formatMonthValue(new Date()));
+    const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
     const [visibleSeries, setVisibleSeries] = useState({
         done: true,
         undone: true,
         overdue: true,
     });
     const [hoveredPoint, setHoveredPoint] = useState(null);
+    const monthPickerRef = useRef(null);
 
     const monthDate = useMemo(() => {
         const [year, month] = selectedMonth.split("-").map(Number);
@@ -101,6 +104,26 @@ const MonthlyTaskLineChart = ({ tasks = [] }) => {
         return Math.max(1, ...values);
     }, [chartData]);
 
+    const formattedSelectedMonth = useMemo(
+        () =>
+            monthDate.toLocaleDateString(undefined, {
+                month: "long",
+                year: "numeric",
+            }),
+        [monthDate]
+    );
+
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (monthPickerRef.current && !monthPickerRef.current.contains(event.target)) {
+                setIsMonthPickerOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleOutsideClick);
+        return () => document.removeEventListener("mousedown", handleOutsideClick);
+    }, []);
+
     const toggleSeries = (key) => {
         setVisibleSeries((prev) => ({
             ...prev,
@@ -111,6 +134,21 @@ const MonthlyTaskLineChart = ({ tasks = [] }) => {
     const shiftMonth = (offset) => {
         const next = new Date(monthDate.getFullYear(), monthDate.getMonth() + offset, 1);
         setSelectedMonth(formatMonthValue(next));
+    };
+
+    const shiftYear = (offset) => {
+        const next = new Date(monthDate.getFullYear() + offset, monthDate.getMonth(), 1);
+        setSelectedMonth(formatMonthValue(next));
+    };
+
+    const selectMonth = (monthIndex) => {
+        setSelectedMonth(formatMonthValue(new Date(monthDate.getFullYear(), monthIndex, 1)));
+        setIsMonthPickerOpen(false);
+    };
+
+    const selectCurrentMonth = () => {
+        setSelectedMonth(formatMonthValue(new Date()));
+        setIsMonthPickerOpen(false);
     };
 
     const buildPath = (key) => {
@@ -176,12 +214,73 @@ const MonthlyTaskLineChart = ({ tasks = [] }) => {
                             <i className="fa-solid fa-chevron-left" aria-hidden="true"></i>
                         </button>
 
-                        <input
-                            type="month"
-                            value={selectedMonth}
-                            onChange={(event) => setSelectedMonth(event.target.value)}
-                            className="min-w-0 flex-1 rounded-xl border border-slate-200 px-3 py-2.5 text-xs font-medium text-slate-700 outline-none transition-colors focus:border-teal-300 sm:px-4 sm:text-sm"
-                        />
+                        <div ref={monthPickerRef} className="relative min-w-0 flex-1">
+                            <button
+                                type="button"
+                                onClick={() => setIsMonthPickerOpen((isOpen) => !isOpen)}
+                                className="flex h-9 w-full min-w-0 items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 shadow-sm outline-none transition-colors hover:border-teal-200 hover:bg-teal-50/40 focus:border-teal-300 focus:ring-2 focus:ring-teal-100 sm:h-11 sm:px-4 sm:text-sm"
+                                aria-haspopup="dialog"
+                                aria-expanded={isMonthPickerOpen}
+                            >
+                                <span>{formattedSelectedMonth}</span>
+                                <i className="fa-regular fa-calendar text-slate-800" aria-hidden="true"></i>
+                            </button>
+
+                            {isMonthPickerOpen && (
+                                <div className="absolute left-1/2 z-30 mt-2 w-[min(18rem,calc(100vw-4rem))] -translate-x-1/2 rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-900/15">
+                                    <div className="flex items-center justify-between rounded-xl bg-slate-50 px-2 py-2">
+                                        <button
+                                            type="button"
+                                            onClick={() => shiftYear(-1)}
+                                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-white hover:text-teal-700"
+                                            aria-label="Previous year"
+                                        >
+                                            <i className="fa-solid fa-chevron-left text-xs" aria-hidden="true"></i>
+                                        </button>
+                                        <span className="text-sm font-bold text-slate-900">
+                                            {monthDate.getFullYear()}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            onClick={() => shiftYear(1)}
+                                            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-white hover:text-teal-700"
+                                            aria-label="Next year"
+                                        >
+                                            <i className="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+
+                                    <div className="mt-3 grid grid-cols-3 gap-2">
+                                        {MONTH_NAMES.map((monthName, index) => {
+                                            const isSelected = index === monthDate.getMonth();
+
+                                            return (
+                                                <button
+                                                    key={monthName}
+                                                    type="button"
+                                                    onClick={() => selectMonth(index)}
+                                                    className={`rounded-xl border px-2 py-2 text-xs font-semibold transition-all ${
+                                                        isSelected
+                                                            ? "border-teal-300 bg-teal-500 text-white shadow-lg shadow-teal-500/25"
+                                                            : "border-transparent bg-slate-50 text-slate-600 hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700"
+                                                    }`}
+                                                >
+                                                    {monthName}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={selectCurrentMonth}
+                                        className="mt-3 w-full rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-bold text-amber-700 transition-colors hover:bg-amber-100"
+                                    >
+                                        This month
+                                    </button>
+                                </div>
+                            )}
+                        </div>
 
                         <button
                             type="button"
