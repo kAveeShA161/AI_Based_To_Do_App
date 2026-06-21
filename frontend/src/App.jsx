@@ -15,7 +15,7 @@ import AIPlanner from './pages/AIPlanner';
 
 const App = () => {
   return (
-    <div className='text-4xl'>
+    <div>
       <ToastContainer
         position="bottom-right"
         autoClose={3200}
