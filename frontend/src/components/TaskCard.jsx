@@ -250,7 +250,7 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
             )}
 
             {!readOnly && showDeleteConfirm && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 transition-opacity">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4 transition-opacity sm:px-6">
                     <div className="w-full max-w-md rounded-lg bg-white p-5 shadow-2xl transform transition-all scale-100 sm:p-6">
                         <h2 className="mb-4 text-lg font-bold text-gray-800 sm:text-xl">Delete Task?</h2>
                         <p className="mb-6 text-sm text-gray-600 sm:text-xl">Are you sure you want to delete this task? This action cannot be undone.</p>
