@@ -102,7 +102,7 @@ const ResetPassword = () => {
           className="cursor-pointer"
           aria-label="Go to home"
         >
-          <img src={assets.Logo} alt="TaskFlow logo" className="w-20" />
+          <img src={assets.Logo} alt="TaskFlow logo" className="w-14 sm:w-20" />
         </button>
 
         <h1 className="mt-5 text-2xl font-bold text-gray-900 sm:mt-6 sm:text-4xl">

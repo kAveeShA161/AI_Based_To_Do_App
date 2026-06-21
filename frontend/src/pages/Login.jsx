@@ -54,7 +54,7 @@ const Login = () => {
       <div className="w-full max-w-xl flex flex-col items-center">
         {/* Top Logo Circle */}
         <div onClick={() => navigate('/')} className="cursor-pointer">
-          <img src={assets.Logo} alt="logo" className="w-20" />
+          <img src={assets.Logo} alt="logo" className="w-14 sm:w-20" />
         </div>
 
         {/* Header */}
