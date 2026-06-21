@@ -1,9 +1,9 @@
-import React, { useContext, useState, useRef, useEffect } from "react";
-import { AppContext } from "../context/AppContext";
-import { assets } from "./../assets/assets";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { AppContext } from "../context/AppContext";
+import { assets } from "./../assets/assets";
 import CalendarHistoryModal from "./CalendarHistoryModal";
 import MonthlyStatsModal from "./MonthlyStatsModal";
 
@@ -17,17 +17,14 @@ const NavBar = ({ actionSlot = null }) => {
   const [historyData, setHistoryData] = useState({ tasks: [], moodHistory: [] });
 
   const menuRef = useRef();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { userData, isLoggedIn, backendUrl, setUserData, setIsLoggedIn } =
     useContext(AppContext);
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
   const fetchHistoryData = async () => {
-    if (!isLoggedIn) {
-      return;
-    }
+    if (!isLoggedIn) return;
 
     try {
       setHistoryLoading(true);
@@ -53,6 +50,7 @@ const NavBar = ({ actionSlot = null }) => {
 
   const openCalendar = async () => {
     setCalendarOpen(true);
+    setMobileMenu(false);
     if (!historyLoaded && !historyLoading) {
       await fetchHistoryData();
     }
@@ -60,6 +58,7 @@ const NavBar = ({ actionSlot = null }) => {
 
   const openStats = async () => {
     setStatsOpen(true);
+    setMobileMenu(false);
     if (!historyLoaded && !historyLoading) {
       await fetchHistoryData();
     }
@@ -82,197 +81,218 @@ const NavBar = ({ actionSlot = null }) => {
   };
 
   useEffect(() => {
-    const handler = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+    const handler = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
         setOpen(false);
       }
     };
+
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const NavButton = ({ path, label }) => (
+  const goHome = () => navigate(isLoggedIn ? "/dashboard" : "/login");
+
+  const NavButton = ({ path, label, icon }) => (
     <button
+      type="button"
       onClick={() => {
         navigate(path);
         setMobileMenu(false);
       }}
-      className={`text-lg px-4 py-2 rounded-lg transition-colors w-full md:w-auto text-left md:text-center ${
+      className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-base font-medium transition-colors ${
         location.pathname === path
-          ? "bg-teal-400 text-white"
-          : "text-gray-600 hover:text-black"
+          ? "bg-teal-400 text-white shadow-sm"
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
       }`}
     >
+      <i className={`${icon} w-5 text-center`} aria-hidden="true"></i>
       {label}
     </button>
   );
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 bg-white shadow-md relative">
-
-      {/* Left */}
-      <div className="flex items-center gap-2">
-        <img
-          src={assets.Logo}
-          alt="logo"
-          className="w-8 cursor-pointer"
-          onClick={() => navigate(isLoggedIn ? "/dashboard" : "/login")}
-        />
-        <span
-          className="text-xl font-bold text-gray-800 cursor-pointer"
-          onClick={() => navigate(isLoggedIn ? "/dashboard" : "/login")}
+    <>
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-72 flex-col border-r border-slate-200 bg-white px-5 py-5 shadow-[18px_0_45px_rgba(15,23,42,0.06)] lg:flex">
+        <button
+          type="button"
+          onClick={goHome}
+          className="flex items-center gap-3 rounded-2xl px-2 py-2 text-left"
         >
-          TaskFlow
-        </span>
-      </div>
+          <img src={assets.Logo} alt="TaskFlow logo" className="h-10 w-10" />
+          <span>
+            <span className="block text-xl font-bold text-slate-950">TaskFlow</span>
+            <span className="block text-xs font-medium text-slate-400">
+              AI task workspace
+            </span>
+          </span>
+        </button>
 
-      {/* Desktop Menu */}
-      <div className="hidden md:flex items-center gap-6">
-        <NavButton path="/dashboard" label="Dashboard" />
-        <NavButton path="/my-tasks" label="My Tasks" />
-        <NavButton path="/ai-planner" label="AI Planner" />
-      </div>
+        <nav className="mt-8 space-y-2">
+          <NavButton path="/dashboard" label="Dashboard" icon="fa-solid fa-chart-line" />
+          <NavButton path="/my-tasks" label="My Tasks" icon="fa-regular fa-circle-check" />
+          <NavButton
+            path="/ai-planner"
+            label="AI Planner"
+            icon="fa-solid fa-wand-magic-sparkles"
+          />
+        </nav>
 
-      {/* Right Section */}
-      <div className="flex items-center gap-4">
         {isLoggedIn && (
-          <div className="hidden items-center gap-3 sm:flex">
+          <div className="mt-8 space-y-3 border-t border-slate-100 pt-6">
+            <button
+              type="button"
+              onClick={() => navigate("/create-task")}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-red-400 px-4 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-red-500"
+            >
+              <i className="fa-solid fa-plus" aria-hidden="true"></i>
+              New Task
+            </button>
+
             <button
               type="button"
               onClick={openStats}
-              className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-teal-300 hover:text-teal-600"
-              title="Open monthly stats"
+              className="flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base font-medium text-slate-600 transition-colors hover:border-teal-300 hover:text-teal-600"
             >
-              <i className="fa-solid fa-chart-line text-lg" aria-hidden="true"></i>
+              <i className="fa-solid fa-chart-line w-5 text-center" aria-hidden="true"></i>
+              Monthly Stats
             </button>
 
             <button
               type="button"
               onClick={openCalendar}
-              className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-colors hover:border-teal-300 hover:text-teal-600"
-              title="Open history calendar"
+              className="flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base font-medium text-slate-600 transition-colors hover:border-teal-300 hover:text-teal-600"
             >
-              <i className="fa-regular fa-calendar-days text-lg" aria-hidden="true"></i>
+              <i className="fa-regular fa-calendar-days w-5 text-center" aria-hidden="true"></i>
+              History Calendar
             </button>
           </div>
         )}
 
         {actionSlot}
 
-        {isLoggedIn && (
-          <button
-            onClick={() => navigate("/create-task")}
-            className="text-lg px-4 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 cursor-pointer hidden sm:block"
-          >
-            + New Task
-          </button>
-        )}
+        <div className="mt-auto">
+          {isLoggedIn && userData ? (
+            <div className="relative" ref={menuRef}>
+              <button
+                type="button"
+                onClick={() => setOpen((current) => !current)}
+                className="flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 text-left transition hover:bg-slate-100"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-400 text-sm font-semibold leading-none tracking-tight text-white">
+                  {userData.fullName ? userData.fullName.slice(0, 2).toUpperCase() : "U"}
+                </span>
+                <span className="min-w-0">
+                  <span className="block truncate text-sm font-semibold text-slate-950">
+                    {userData.fullName}
+                  </span>
+                  <span className="block truncate text-xs text-slate-500">
+                    {userData.email}
+                  </span>
+                </span>
+              </button>
 
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden text-2xl"
-          onClick={() => setMobileMenu(!mobileMenu)}
-        >
-          ☰
+              {open && (
+                <div className="absolute bottom-16 left-0 z-50 w-full overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
+                  <div className="border-b border-gray-100 px-4 py-3">
+                    <p className="text-sm font-semibold text-gray-900">{userData.fullName}</p>
+                    <p className="mt-1 truncate text-xs text-gray-500">{userData.email}</p>
+                  </div>
+
+                  <div className="p-2">
+                    <button
+                      type="button"
+                      className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
+                      onClick={logout}
+                    >
+                      <i className="fa-solid fa-right-from-bracket text-base" aria-hidden="true"></i>
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="grid gap-2">
+              <button
+                type="button"
+                onClick={() => navigate("/login")}
+                className="rounded-xl bg-red-400 px-4 py-2.5 text-sm font-semibold text-white"
+              >
+                Login
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate("/register")}
+                className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-700"
+              >
+                Register
+              </button>
+            </div>
+          )}
+        </div>
+      </aside>
+
+      <div className="sticky top-0 z-40 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-3 shadow-sm lg:hidden">
+        <button type="button" onClick={goHome} className="flex items-center gap-2">
+          <img src={assets.Logo} alt="TaskFlow logo" className="h-8 w-8" />
+          <span className="text-lg font-bold text-slate-950">TaskFlow</span>
         </button>
 
-        {/* User Section */}
-        {isLoggedIn && userData ? (
-          <div className="relative flex items-center gap-3" ref={menuRef}>
-            <div className="hidden sm:block text-right">
-              <p className="text-lg font-semibold text-gray-900">{userData.fullName}</p>
-              <p className="text-sm text-gray-500">{userData.email}</p>
-            </div>
-
+        <div className="flex items-center gap-3">
+          {isLoggedIn && (
             <button
               type="button"
-              onClick={() => setOpen(!open)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-red-400 text-sm font-semibold leading-none tracking-tight text-white cursor-pointer transition-transform hover:scale-105 sm:text-base"
+              onClick={() => navigate("/create-task")}
+              className="rounded-xl bg-red-400 px-3 py-2 text-sm font-semibold text-white"
             >
-              {userData.fullName
-                ? userData.fullName.slice(0, 2).toUpperCase()
-                : "U"}
+              + New
             </button>
+          )}
 
-            {open && (
-              <div className="absolute right-0 top-14 z-50 w-64 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
-                <div className="border-b border-gray-100 px-4 py-3">
-                  <p className="text-sm font-semibold text-gray-900">{userData.fullName}</p>
-                  <p className="mt-1 truncate text-xs text-gray-500">{userData.email}</p>
-                </div>
-
-                <div className="p-2">
-                  <button
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-red-500 transition-colors hover:bg-red-50"
-                    onClick={logout}
-                  >
-                    <i className="fa-solid fa-right-from-bracket text-base" aria-hidden="true"></i>
-                    <span>Sign Out</span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className="hidden md:flex gap-2">
-            <button
-              onClick={() => navigate("/login")}
-              className="px-4 py-2 bg-red-400 text-white rounded-lg"
-            >
-              Login
-            </button>
-            <button
-              onClick={() => navigate("/register")}
-              className="px-4 py-2 bg-red-400 text-white rounded-lg"
-            >
-              Register
-            </button>
-          </div>
-        )}
+          <button
+            type="button"
+            className="rounded-xl border border-slate-200 px-3 py-2 text-lg text-slate-700"
+            onClick={() => setMobileMenu((current) => !current)}
+            aria-label="Open navigation menu"
+          >
+            <i className="fa-solid fa-bars" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Menu */}
       {mobileMenu && (
-        <div className="absolute top-16 left-0 w-full bg-white shadow-md md:hidden flex flex-col gap-2 p-4 z-50">
-          <NavButton path="/dashboard" label="Dashboard" />
-          <NavButton path="/my-tasks" label="My Tasks" />
-          <NavButton path="/ai-planner" label="AI Planner" />
+        <div className="fixed left-3 right-3 top-16 z-50 flex flex-col gap-2 rounded-3xl border border-slate-200 bg-white p-4 shadow-2xl lg:hidden">
+          <NavButton path="/dashboard" label="Dashboard" icon="fa-solid fa-chart-line" />
+          <NavButton path="/my-tasks" label="My Tasks" icon="fa-regular fa-circle-check" />
+          <NavButton
+            path="/ai-planner"
+            label="AI Planner"
+            icon="fa-solid fa-wand-magic-sparkles"
+          />
 
           {isLoggedIn ? (
             <>
               <button
-                onClick={() => {
-                  openStats();
-                  setMobileMenu(false);
-                }}
-                className="text-lg px-4 py-2 text-slate-700 font-semibold"
+                type="button"
+                onClick={openStats}
+                className="rounded-2xl px-4 py-3 text-left text-base font-semibold text-slate-700"
               >
                 Monthly Stats
               </button>
 
               <button
-                onClick={() => {
-                  openCalendar();
-                  setMobileMenu(false);
-                }}
-                className="text-lg px-4 py-2 text-slate-700 font-semibold"
+                type="button"
+                onClick={openCalendar}
+                className="rounded-2xl px-4 py-3 text-left text-base font-semibold text-slate-700"
               >
                 History Calendar
               </button>
 
               <button
-                onClick={() => {
-                  navigate("/create-task");
-                  setMobileMenu(false);
-                }}
-                className="text-lg px-4 py-2 bg-red-400 text-white rounded-lg"
-              >
-                + New Task
-              </button>
-
-              <button
+                type="button"
                 onClick={logout}
-                className="text-lg px-4 py-2 text-red-500 font-semibold"
+                className="rounded-2xl px-4 py-3 text-left text-base font-semibold text-red-500"
               >
                 Sign Out
               </button>
@@ -280,21 +300,23 @@ const NavBar = ({ actionSlot = null }) => {
           ) : (
             <>
               <button
+                type="button"
                 onClick={() => {
                   navigate("/login");
                   setMobileMenu(false);
                 }}
-                className="px-4 py-2 bg-red-400 text-white rounded-lg"
+                className="rounded-2xl bg-red-400 px-4 py-3 text-base font-semibold text-white"
               >
                 Login
               </button>
 
               <button
+                type="button"
                 onClick={() => {
                   navigate("/register");
                   setMobileMenu(false);
                 }}
-                className="px-4 py-2 bg-red-400 text-white rounded-lg"
+                className="rounded-2xl border border-slate-200 px-4 py-3 text-base font-semibold text-slate-700"
               >
                 Register
               </button>
@@ -316,7 +338,7 @@ const NavBar = ({ actionSlot = null }) => {
         onClose={() => setStatsOpen(false)}
         tasks={historyData.tasks}
       />
-    </div>
+    </>
   );
 };
 

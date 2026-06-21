@@ -64,7 +64,7 @@ const CreateTask = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50 lg:pl-72">
             <NavBar />
             <div className="flex justify-center px-4 py-6 sm:px-6 sm:py-8">
 
