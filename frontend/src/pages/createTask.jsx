@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
+import StyledDatePicker from "../components/StyledDatePicker";
 
 const CreateTask = () => {
     const { backendUrl } = useContext(AppContext);
@@ -108,11 +109,10 @@ const CreateTask = () => {
                     <label className="mt-5 block text-base font-medium text-gray-700 sm:text-lg">
                         Due Date
                     </label>
-                    <input
-                        type="date"
+                    <StyledDatePicker
                         value={dueDate}
-                        onChange={(e) => setDueDate(e.target.value)}
-                        className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-base outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-lg"
+                        onChange={setDueDate}
+                        className="mt-2"
                     />
 
                     <label className="mt-5 block text-base font-medium text-gray-700 sm:text-lg">

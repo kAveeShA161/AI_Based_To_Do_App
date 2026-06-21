@@ -1,4 +1,5 @@
 import React from "react";
+import StyledDatePicker from "./StyledDatePicker";
 
 const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
     const priorityColors = {
@@ -197,11 +198,10 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
                                     <label className="text-sm font-medium text-gray-700 sm:text-lg">
                                         Due Date
                                     </label>
-                                    <input
-                                        type="date"
+                                    <StyledDatePicker
                                         value={editForm.dueDate}
-                                        onChange={(e) => handleEditChange("dueDate", e.target.value)}
-                                        className="mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
+                                        onChange={(value) => handleEditChange("dueDate", value)}
+                                        className="mt-2"
                                     />
                                 </div>
 

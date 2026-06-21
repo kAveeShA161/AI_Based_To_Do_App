@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import NavBar from "../components/NavBar";
 import { AppContext } from "../context/AppContext";
+import StyledDatePicker from "../components/StyledDatePicker";
 
 const priorityStyles = {
     High: "border-red-200 bg-red-50 text-red-700",
@@ -255,13 +256,13 @@ const AIPlanner = () => {
                                             <label className="text-sm font-medium text-gray-700 sm:text-lg">
                                                 Due Date
                                             </label>
-                                            <input
-                                                type="date"
-                                                className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
+                                            <StyledDatePicker
                                                 value={task.dueDate}
-                                                onChange={(e) =>
-                                                    updateTask(index, "dueDate", e.target.value)
+                                                onChange={(value) =>
+                                                    updateTask(index, "dueDate", value)
                                                 }
+                                                className="mt-2"
+                                                popoverClassName="xl:right-0 xl:left-auto xl:translate-x-0"
                                             />
                                         </div>
 
