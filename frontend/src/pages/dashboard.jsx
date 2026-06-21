@@ -259,7 +259,7 @@ const Dashboard = () => {
                         </p>
                     </div>
 
-                    <div className="mt-5 grid grid-cols-3 gap-3 overflow-x-auto pb-1 sm:mt-6">
+                    <div className="mt-5 grid grid-cols-3 gap-2 overflow-x-auto pb-1 sm:mt-6 sm:gap-3">
                         {moodOptions.map((mood) => {
                             const isActive = mood.id === selectedMood;
 
@@ -268,13 +268,13 @@ const Dashboard = () => {
                                     key={mood.id}
                                     type="button"
                                     onClick={() => handleMoodSelect(mood.id)}
-                                    className={`min-w-[150px] rounded-2xl border px-3 py-4 text-center transition-all duration-200 sm:min-w-0 sm:px-4 sm:py-5 ${isActive
+                                    className={`min-w-[108px] rounded-2xl border px-2 py-3 text-center transition-all duration-200 sm:min-w-0 sm:px-4 sm:py-5 ${isActive
                                         ? `${mood.bg} ${mood.text} border-transparent ring-2 ${mood.ring} shadow-md`
                                         : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:shadow-sm"
                                         }`}
                                 >
                                     <div
-                                        className={`mx-auto flex h-11 w-11 items-center justify-center rounded-full text-2xl sm:h-14 sm:w-14 sm:text-3xl ${isActive
+                                        className={`mx-auto flex h-9 w-9 items-center justify-center rounded-full text-xl sm:h-14 sm:w-14 sm:text-3xl ${isActive
                                             ? `bg-gradient-to-br ${mood.accent} text-white shadow-sm`
                                             : "bg-gray-100"
                                             }`}
@@ -282,11 +282,11 @@ const Dashboard = () => {
                                         <i className={mood.iconClass} aria-hidden="true"></i>
                                     </div>
 
-                                    <p className="mt-3 text-xs font-semibold sm:mt-4 sm:text-base">
+                                    <p className="mt-2 text-[10px] font-semibold sm:mt-4 sm:text-base">
                                         {mood.label}
                                     </p>
 
-                                    <p className="mt-2 text-[10px] leading-4 text-gray-500 sm:text-xs sm:leading-5">
+                                    <p className="mt-1 text-[9px] leading-3 text-gray-500 sm:mt-2 sm:text-xs sm:leading-5">
                                         {mood.description}
                                     </p>
                                 </button>
@@ -295,32 +295,32 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className="mb-10 grid grid-cols-3 gap-3 overflow-x-auto pb-1 xl:gap-6">
-                    <div className="flex min-w-[180px] rounded-xl bg-white p-4 shadow-sm sm:min-w-0 sm:p-6">
-                        <i className="fa fa-bullseye rounded-full bg-blue-100 px-3 py-3 text-xl text-blue-500 sm:px-4 sm:py-4 sm:text-2xl"></i>
-                        <div className="ml-4">
-                            <p className="text-sm text-gray-500 sm:text-lg">Completion Rate</p>
-                            <h2 className="text-xl font-bold sm:text-2xl">
+                <div className="mb-10 grid grid-cols-3 gap-2 overflow-x-auto pb-1 sm:gap-3 xl:gap-6">
+                    <div className="flex min-w-[112px] items-center rounded-xl bg-white p-3 shadow-sm sm:min-w-0 sm:p-6">
+                        <i className="fa fa-bullseye rounded-full bg-blue-100 px-2.5 py-2.5 text-base text-blue-500 sm:px-4 sm:py-4 sm:text-2xl"></i>
+                        <div className="ml-2 min-w-0 sm:ml-4">
+                            <p className="text-[10px] leading-3 text-gray-500 sm:text-lg sm:leading-normal">Completion Rate</p>
+                            <h2 className="text-base font-bold sm:text-2xl">
                                 {loading ? "--" : `${dashboard?.completionRate ?? 0}%`}
                             </h2>
                         </div>
                     </div>
 
-                    <div className="flex min-w-[180px] rounded-xl bg-white p-4 shadow-sm sm:min-w-0 sm:p-6">
-                        <i className="fa fa-trophy rounded-full bg-green-100 px-3 py-3 text-xl text-green-500 sm:px-4 sm:py-4 sm:text-2xl"></i>
-                        <div className="ml-4">
-                            <p className="text-sm text-gray-500 sm:text-lg">Focus Streak</p>
-                            <h2 className="text-xl font-bold sm:text-2xl">
+                    <div className="flex min-w-[112px] items-center rounded-xl bg-white p-3 shadow-sm sm:min-w-0 sm:p-6">
+                        <i className="fa fa-trophy rounded-full bg-green-100 px-2.5 py-2.5 text-base text-green-500 sm:px-4 sm:py-4 sm:text-2xl"></i>
+                        <div className="ml-2 min-w-0 sm:ml-4">
+                            <p className="text-[10px] leading-3 text-gray-500 sm:text-lg sm:leading-normal">Focus Streak</p>
+                            <h2 className="text-base font-bold sm:text-2xl">
                                 {loading ? "--" : `${dashboard?.focusStreak ?? 0} Days`}
                             </h2>
                         </div>
                     </div>
 
-                    <div className="flex min-w-[180px] rounded-xl bg-white p-4 shadow-sm sm:min-w-0 sm:p-6">
-                        <i className="fa fa-bolt rounded-full bg-purple-100 px-3 py-3 text-xl text-purple-500 sm:px-4 sm:py-4 sm:text-2xl"></i>
-                        <div className="ml-4">
-                            <p className="text-sm text-gray-500 sm:text-lg">Tasks Done</p>
-                            <h2 className="text-xl font-bold sm:text-2xl">
+                    <div className="flex min-w-[112px] items-center rounded-xl bg-white p-3 shadow-sm sm:min-w-0 sm:p-6">
+                        <i className="fa fa-bolt rounded-full bg-purple-100 px-2.5 py-2.5 text-base text-purple-500 sm:px-4 sm:py-4 sm:text-2xl"></i>
+                        <div className="ml-2 min-w-0 sm:ml-4">
+                            <p className="text-[10px] leading-3 text-gray-500 sm:text-lg sm:leading-normal">Tasks Done</p>
+                            <h2 className="text-base font-bold sm:text-2xl">
                                 {loading ? "--" : dashboard?.tasksDone ?? 0}
                             </h2>
                         </div>
