@@ -228,13 +228,13 @@ const Dashboard = () => {
             <NavBar />
 
             <div className="mx-auto max-w-screen-2xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8 xl:px-10">
-                <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="mb-6 flex flex-col gap-4 sm:mb-8 lg:flex-row lg:items-start lg:justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">
+                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
                             {getGreeting()}, {userData?.fullName} !
                         </h1>
 
-                        <p className="mt-1 text-base text-gray-500 sm:text-lg">
+                        <p className="mt-1 text-sm text-gray-500 sm:text-lg">
                             You have {dashboard?.todayTasks?.filter((task) => !task.isCompleted).length || 0} tasks pending today. Let&apos;s make it a productive day!
                         </p>
                     </div>
@@ -242,24 +242,24 @@ const Dashboard = () => {
                     <button
                         type="button"
                         onClick={openCalendar}
-                        className="inline-flex items-center justify-center gap-3 self-start rounded-2xl border border-slate-200 bg-white px-5 py-3 text-base font-medium text-slate-700 shadow-sm transition-colors hover:border-teal-300 hover:text-teal-600"
+                        className="inline-flex items-center justify-center gap-2 self-start rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:border-teal-300 hover:text-teal-600 sm:gap-3 sm:px-5 sm:text-base"
                     >
                         <i className="fa-regular fa-calendar-days text-lg" aria-hidden="true"></i>
                         View History Calendar
                     </button>
                 </div>
 
-                <div className="mb-8 rounded-3xl border border-gray-100 bg-white px-4 py-6 shadow-sm sm:mb-10 sm:px-6 lg:px-8">
+                <div className="mb-8 rounded-3xl border border-gray-100 bg-white px-4 py-5 shadow-sm sm:mb-10 sm:px-6 sm:py-6 lg:px-8">
                     <div className="text-center">
-                        <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                        <h2 className="text-lg font-bold text-gray-900 sm:text-2xl">
                             How are you feeling today?
                         </h2>
-                        <p className="mt-2 text-sm text-gray-500 sm:text-base">
+                        <p className="mt-2 text-xs text-gray-500 sm:text-base">
                             We&apos;ll adjust your task recommendations based on your energy.
                         </p>
                     </div>
 
-                    <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <div className="mt-5 grid grid-cols-3 gap-3 overflow-x-auto pb-1 sm:mt-6">
                         {moodOptions.map((mood) => {
                             const isActive = mood.id === selectedMood;
 
@@ -268,13 +268,13 @@ const Dashboard = () => {
                                     key={mood.id}
                                     type="button"
                                     onClick={() => handleMoodSelect(mood.id)}
-                                    className={`rounded-2xl border px-4 py-5 text-center transition-all duration-200 ${isActive
+                                    className={`min-w-[150px] rounded-2xl border px-3 py-4 text-center transition-all duration-200 sm:min-w-0 sm:px-4 sm:py-5 ${isActive
                                         ? `${mood.bg} ${mood.text} border-transparent ring-2 ${mood.ring} shadow-md`
                                         : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:shadow-sm"
                                         }`}
                                 >
                                     <div
-                                        className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full text-3xl ${isActive
+                                        className={`mx-auto flex h-11 w-11 items-center justify-center rounded-full text-2xl sm:h-14 sm:w-14 sm:text-3xl ${isActive
                                             ? `bg-gradient-to-br ${mood.accent} text-white shadow-sm`
                                             : "bg-gray-100"
                                             }`}
@@ -282,11 +282,11 @@ const Dashboard = () => {
                                         <i className={mood.iconClass} aria-hidden="true"></i>
                                     </div>
 
-                                    <p className="mt-4 text-sm font-semibold sm:text-base">
+                                    <p className="mt-3 text-xs font-semibold sm:mt-4 sm:text-base">
                                         {mood.label}
                                     </p>
 
-                                    <p className="mt-2 text-xs leading-5 text-gray-500">
+                                    <p className="mt-2 text-[10px] leading-4 text-gray-500 sm:text-xs sm:leading-5">
                                         {mood.description}
                                     </p>
                                 </button>
@@ -295,32 +295,32 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <div className="mb-10 grid grid-cols-1 gap-5 md:grid-cols-3 xl:gap-6">
-                    <div className="flex rounded-xl bg-white p-6 shadow-sm">
-                        <i className="fa fa-bullseye rounded-full bg-blue-100 px-4 py-4 text-2xl text-blue-500"></i>
+                <div className="mb-10 grid grid-cols-3 gap-3 overflow-x-auto pb-1 xl:gap-6">
+                    <div className="flex min-w-[180px] rounded-xl bg-white p-4 shadow-sm sm:min-w-0 sm:p-6">
+                        <i className="fa fa-bullseye rounded-full bg-blue-100 px-3 py-3 text-xl text-blue-500 sm:px-4 sm:py-4 sm:text-2xl"></i>
                         <div className="ml-4">
-                            <p className="text-lg text-gray-500">Completion Rate</p>
-                            <h2 className="text-2xl font-bold">
+                            <p className="text-sm text-gray-500 sm:text-lg">Completion Rate</p>
+                            <h2 className="text-xl font-bold sm:text-2xl">
                                 {loading ? "--" : `${dashboard?.completionRate ?? 0}%`}
                             </h2>
                         </div>
                     </div>
 
-                    <div className="flex rounded-xl bg-white p-6 shadow-sm">
-                        <i className="fa fa-trophy rounded-full bg-green-100 px-4 py-4 text-2xl text-green-500"></i>
+                    <div className="flex min-w-[180px] rounded-xl bg-white p-4 shadow-sm sm:min-w-0 sm:p-6">
+                        <i className="fa fa-trophy rounded-full bg-green-100 px-3 py-3 text-xl text-green-500 sm:px-4 sm:py-4 sm:text-2xl"></i>
                         <div className="ml-4">
-                            <p className="text-lg text-gray-500">Focus Streak</p>
-                            <h2 className="text-2xl font-bold">
+                            <p className="text-sm text-gray-500 sm:text-lg">Focus Streak</p>
+                            <h2 className="text-xl font-bold sm:text-2xl">
                                 {loading ? "--" : `${dashboard?.focusStreak ?? 0} Days`}
                             </h2>
                         </div>
                     </div>
 
-                    <div className="flex rounded-xl bg-white p-6 shadow-sm">
-                        <i className="fa fa-bolt rounded-full bg-purple-100 px-4 py-4 text-2xl text-purple-500"></i>
+                    <div className="flex min-w-[180px] rounded-xl bg-white p-4 shadow-sm sm:min-w-0 sm:p-6">
+                        <i className="fa fa-bolt rounded-full bg-purple-100 px-3 py-3 text-xl text-purple-500 sm:px-4 sm:py-4 sm:text-2xl"></i>
                         <div className="ml-4">
-                            <p className="text-lg text-gray-500">Tasks Done</p>
-                            <h2 className="text-2xl font-bold">
+                            <p className="text-sm text-gray-500 sm:text-lg">Tasks Done</p>
+                            <h2 className="text-xl font-bold sm:text-2xl">
                                 {loading ? "--" : dashboard?.tasksDone ?? 0}
                             </h2>
                         </div>
