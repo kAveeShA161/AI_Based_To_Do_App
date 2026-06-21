@@ -88,41 +88,41 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
 
     return (
         <>
-            <div className={`bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow ${task.isCompleted ? "opacity-75" : ""}`}>
+            <div className={`bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-start gap-3 hover:shadow-md transition-shadow sm:gap-4 sm:p-6 ${task.isCompleted ? "opacity-75" : ""}`}>
                 {!readOnly && (
                     <div className="pt-1">
                         <input
                             type="checkbox"
                             checked={task.isCompleted}
                             onChange={handleCheckboxChange}
-                            className="w-6 h-6 rounded border-gray-300 text-red-400 focus:ring-red-400 cursor-pointer"
+                            className="h-5 w-5 rounded border-gray-300 text-red-400 focus:ring-red-400 cursor-pointer sm:h-6 sm:w-6"
                         />
                     </div>
                 )}
 
                 <div className="flex-1">
                     <div className="flex justify-between items-start mb-2 gap-3">
-                        <h3 className={`text-xl font-semibold text-gray-800 ${task.isCompleted ? "line-through text-gray-500" : ""}`}>
+                        <h3 className={`text-base font-semibold text-gray-800 sm:text-xl ${task.isCompleted ? "line-through text-gray-500" : ""}`}>
                             {task.title}
                         </h3>
                         <div className="flex flex-wrap items-center justify-end gap-2">
-                            <span className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${priorityColors[task.priority] || "bg-gray-100"}`}>
+                            <span className={`px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap sm:px-3 sm:text-sm ${priorityColors[task.priority] || "bg-gray-100"}`}>
                                 {task.priority} Difficulty
                             </span>
                             {readOnly && (
-                                <span className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${statusPillClass}`}>
+                                <span className={`px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap sm:px-3 sm:text-sm ${statusPillClass}`}>
                                     {task.isCompleted ? "Done" : "To Do"}
                                 </span>
                             )}
                         </div>
                     </div>
 
-                    <p className={`text-xl text-gray-600 mb-4 ${task.isCompleted ? "text-gray-400" : ""}`}>
+                    <p className={`mb-4 text-sm text-gray-600 sm:text-xl ${task.isCompleted ? "text-gray-400" : ""}`}>
                         {task.description || "No description"}
                     </p>
 
                     <div className="flex items-center justify-between w-full mt-4 gap-4">
-                        <div className="flex items-center gap-4 text-sm text-gray-500 flex-wrap">
+                        <div className="flex items-center gap-3 text-xs text-gray-500 flex-wrap sm:gap-4 sm:text-sm">
                             <div className="flex items-center gap-1">
                                 <i className="fa-regular fa-calendar"></i>
                                 {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "No Date"}
@@ -139,7 +139,7 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={openEditModal}
-                                    className="text-xl text-gray-400 hover:text-blue-500 transition-colors p-2 rounded-full hover:bg-blue-50"
+                                    className="p-2 text-base text-gray-400 hover:text-blue-500 transition-colors rounded-full hover:bg-blue-50 sm:text-xl"
                                     title="Edit Task"
                                 >
                                     <i className="fa-solid fa-pen"></i>
@@ -148,7 +148,7 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
                                 {onDelete && (
                                     <button
                                         onClick={handleDeleteClick}
-                                        className="text-xl text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50"
+                                        className="p-2 text-base text-gray-400 hover:text-red-500 transition-colors rounded-full hover:bg-red-50 sm:text-xl"
                                         title="Delete Task"
                                     >
                                         <i className="fa-solid fa-trash"></i>
@@ -162,54 +162,54 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
 
             {!readOnly && showEditModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-                    <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-2xl">
-                        <h2 className="text-2xl font-bold mb-5 text-gray-800">Edit Task</h2>
+                    <div className="bg-white p-5 rounded-2xl shadow-2xl w-full max-w-2xl sm:p-6">
+                        <h2 className="mb-5 text-xl font-bold text-gray-800 sm:text-2xl">Edit Task</h2>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="text-lg font-medium text-gray-700">
+                                <label className="text-sm font-medium text-gray-700 sm:text-lg">
                                     Task Title
                                 </label>
                                 <input
                                     type="text"
                                     value={editForm.title}
                                     onChange={(e) => handleEditChange("title", e.target.value)}
-                                    className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 mt-2 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                                    className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
                                 />
                             </div>
 
                             <div>
-                                <label className="text-lg font-medium text-gray-700">
+                                <label className="text-sm font-medium text-gray-700 sm:text-lg">
                                     Description
                                 </label>
                                 <textarea
                                     value={editForm.description}
                                     onChange={(e) => handleEditChange("description", e.target.value)}
-                                    className="text-xl w-full h-28 border border-gray-200 rounded-lg px-4 py-3 mt-2 outline-none resize-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                                    className="mt-2 h-28 w-full resize-none rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
                                 />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                    <label className="text-lg font-medium text-gray-700">
+                                    <label className="text-sm font-medium text-gray-700 sm:text-lg">
                                         Due Date
                                     </label>
                                     <input
                                         type="date"
                                         value={editForm.dueDate}
                                         onChange={(e) => handleEditChange("dueDate", e.target.value)}
-                                        className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 mt-2 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                                        className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="text-lg font-medium text-gray-700">
+                                    <label className="text-sm font-medium text-gray-700 sm:text-lg">
                                         Difficulty Level
                                     </label>
                                     <select
                                         value={editForm.priority}
                                         onChange={(e) => handleEditChange("priority", e.target.value)}
-                                        className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 mt-2 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer"
+                                        className="mt-2 w-full cursor-pointer rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
                                     >
                                         <option>High</option>
                                         <option>Medium</option>
@@ -218,14 +218,14 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
                                 </div>
 
                                 <div>
-                                    <label className="text-lg font-medium text-gray-700">
+                                    <label className="text-sm font-medium text-gray-700 sm:text-lg">
                                         Category
                                     </label>
                                     <input
                                         type="text"
                                         value={editForm.category}
                                         onChange={(e) => handleEditChange("category", e.target.value)}
-                                        className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 mt-2 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                                        className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
                                     />
                                 </div>
                             </div>
@@ -234,13 +234,13 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
                         <div className="flex justify-end gap-3 mt-6">
                             <button
                                 onClick={closeEditModal}
-                                className="text-xl px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium cursor-pointer transition-colors"
+                                className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 cursor-pointer sm:text-xl"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleEditSave}
-                                className="text-xl px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium cursor-pointer transition-colors shadow-sm"
+                                className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-red-600 cursor-pointer sm:text-xl"
                             >
                                 Save
                             </button>
@@ -251,19 +251,19 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
 
             {!readOnly && showDeleteConfirm && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 transition-opacity">
-                    <div className="bg-white p-6 rounded-lg shadow-2xl w-150 transform transition-all scale-100">
-                        <h2 className="text-xl font-bold mb-4 text-gray-800">Delete Task?</h2>
-                        <p className="text-xl text-gray-600 mb-6">Are you sure you want to delete this task? This action cannot be undone.</p>
+                    <div className="w-full max-w-md rounded-lg bg-white p-5 shadow-2xl transform transition-all scale-100 sm:p-6">
+                        <h2 className="mb-4 text-lg font-bold text-gray-800 sm:text-xl">Delete Task?</h2>
+                        <p className="mb-6 text-sm text-gray-600 sm:text-xl">Are you sure you want to delete this task? This action cannot be undone.</p>
                         <div className="flex justify-end gap-3">
                             <button
                                 onClick={cancelDelete}
-                                className="text-xl px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium cursor-pointer transition-colors"
+                                className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 cursor-pointer sm:text-xl"
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={confirmDelete}
-                                className="text-xl px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-medium cursor-pointer transition-colors shadow-sm"
+                                className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-red-600 cursor-pointer sm:text-xl"
                             >
                                 Delete
                             </button>
