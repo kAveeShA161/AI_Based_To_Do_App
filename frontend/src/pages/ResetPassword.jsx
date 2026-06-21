@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { assets } from "./../assets/assets";
 import { AppContext } from "../context/AppContext";
+import PasswordInput from "../components/PasswordInput";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -164,8 +165,7 @@ const ResetPassword = () => {
                 <label className="text-xl font-medium text-gray-700">
                   New password
                 </label>
-                <input
-                  type="password"
+                <PasswordInput
                   name="newPassword"
                   placeholder="Enter new password"
                   value={newPassword}
@@ -179,8 +179,7 @@ const ResetPassword = () => {
                 <label className="text-xl font-medium text-gray-700">
                   Confirm new password
                 </label>
-                <input
-                  type="password"
+                <PasswordInput
                   name="confirmPassword"
                   placeholder="Confirm new password"
                   value={confirmPassword}

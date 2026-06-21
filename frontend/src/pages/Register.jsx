@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import PasswordInput from "../components/PasswordInput";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -138,8 +139,7 @@ const Register = () => {
               <label className="text-xl font-medium text-gray-700">
                 Password
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 name="password"
                 value={form.password}
                 onChange={handleChange}
@@ -154,8 +154,7 @@ const Register = () => {
               <label className="text-xl font-medium text-gray-700">
                 Confirm password
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 name="confirmPassword"
                 value={form.confirmPassword}
                 onChange={handleChange}

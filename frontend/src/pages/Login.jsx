@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import PasswordInput from '../components/PasswordInput';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -87,8 +88,7 @@ const Login = () => {
               <label className="text-xl font-medium text-gray-700">
                 Password
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 name="password"
                 onChange={e => setPassword(e.target.value)}
                 value={password}
