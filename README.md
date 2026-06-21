@@ -7,6 +7,18 @@ The project is split into two independently runnable applications:
 - `frontend/` - React 19 + Vite client application.
 - `Backend/` - Express 5 + MongoDB API server.
 
+## Live Application
+
+The application is deployed and available at:
+
+[`https://ai-based-to-do-app.vercel.app/`](https://ai-based-to-do-app.vercel.app/)
+
+Current production setup:
+
+- Frontend: deployed on Vercel.
+- Backend: deployed on AWS Lambda.
+- Database: hosted on MongoDB Atlas.
+
 ## Features
 
 - User registration, login, logout, email verification, and password reset flows.
@@ -23,9 +35,10 @@ The project is split into two independently runnable applications:
 | --- | --- |
 | Frontend | React 19, Vite 7, React Router 7, Tailwind CSS 4, Axios |
 | Backend | Node.js, Express 5, Mongoose 9, JWT, bcryptjs, cookie-parser, CORS |
-| Database | MongoDB |
+| Database | MongoDB Atlas |
 | Email | Nodemailer with Brevo SMTP relay |
 | AI | Google Generative AI SDK |
+| Deployment | Vercel, AWS Lambda |
 | Containers | Docker, Docker Compose, Nginx |
 
 ## Repository Structure
@@ -52,6 +65,8 @@ The project is split into two independently runnable applications:
 |   +-- nginx.conf
 |   +-- package.json
 |   +-- vite.config.js
++-- docs/
+|   +-- screenshots/
 +-- docker-compose.yml
 +-- README.md
 ```
@@ -64,6 +79,23 @@ The project is split into two independently runnable applications:
 - Brevo SMTP credentials for email delivery.
 - Google Gemini API key for AI planning.
 - Docker Desktop if you want to run the containerized application.
+
+## Screenshots
+
+Upload application screenshots to `docs/screenshots/` and add them here.
+
+| Page | Screenshot |
+| --- | --- |
+| Login | `docs/screenshots/login.png` |
+| Dashboard | `docs/screenshots/dashboard.png` |
+| Task Planner | `docs/screenshots/task-planner.png` |
+| Calendar / History | `docs/screenshots/calendar-history.png` |
+
+Example Markdown after adding an image:
+
+```md
+![Dashboard](docs/screenshots/dashboard.png)
+```
 
 ## Environment Variables
 
@@ -160,6 +192,9 @@ The backend service reads `Backend/.env` through `env_file`, so that file must u
 
 ## Production Notes
 
+- The live frontend is hosted on Vercel at `https://ai-based-to-do-app.vercel.app/`.
+- The production backend is hosted on AWS Lambda.
+- Production data is stored in MongoDB Atlas.
 - Set `NODE_ENV=production` on the backend when deployed behind HTTPS. Authentication cookies will then use `secure: true` and `sameSite: none`.
 - Set `FRONTEND_URL` to the deployed frontend origin so CORS accepts credentialed requests.
 - Set `VITE_BACKEND_URL` to the deployed backend API origin before building the frontend.
