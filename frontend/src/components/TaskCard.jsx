@@ -161,8 +161,8 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
             </div>
 
             {!readOnly && showEditModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-                    <div className="bg-white p-5 rounded-2xl shadow-2xl w-full max-w-2xl sm:p-6">
+                <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 px-4 py-6">
+                    <div className="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl sm:p-6">
                         <h2 className="mb-5 text-xl font-bold text-gray-800 sm:text-2xl">Edit Task</h2>
 
                         <div className="space-y-4">
@@ -198,7 +198,7 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
                                         type="date"
                                         value={editForm.dueDate}
                                         onChange={(e) => handleEditChange("dueDate", e.target.value)}
-                                        className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
+                                        className="mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
                                     />
                                 </div>
 
@@ -209,7 +209,7 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
                                     <select
                                         value={editForm.priority}
                                         onChange={(e) => handleEditChange("priority", e.target.value)}
-                                        className="mt-2 w-full cursor-pointer rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
+                                        className="mt-2 w-full cursor-pointer rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl"
                                     >
                                         <option>High</option>
                                         <option>Medium</option>
