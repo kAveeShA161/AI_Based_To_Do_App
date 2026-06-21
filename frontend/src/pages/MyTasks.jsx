@@ -16,6 +16,7 @@ const MyTasks = () => {
     const [calendarLoading, setCalendarLoading] = useState(false);
     const [calendarLoaded, setCalendarLoaded] = useState(false);
     const [filter, setFilter] = useState("All Tasks");
+    const [filterMenuOpen, setFilterMenuOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortBy, setSortBy] = useState("dueDate");
     const navigate = useNavigate();
@@ -190,21 +191,21 @@ const MyTasks = () => {
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8">
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">My Tasks</h1>
-                        <p className="text-2xl text-gray-500 mt-1">{tasks.length} tasks</p>
+                        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">My Tasks</h1>
+                        <p className="mt-1 text-sm text-gray-500 sm:text-2xl">{tasks.length} tasks</p>
                     </div>
 
                     <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
                         <button
                             type="button"
                             onClick={openCalendar}
-                            className="text-xl px-4 py-3 bg-white text-gray-700 rounded-lg border border-gray-200 hover:border-red-300 hover:text-red-500 cursor-pointer w-full sm:w-auto"
+                            className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 hover:border-red-300 hover:text-red-500 cursor-pointer sm:w-auto sm:text-xl"
                         >
                             <i className="fa-regular fa-calendar-days mr-2" aria-hidden="true"></i>
                             History Calendar
                         </button>
 
-                        <button onClick={() => navigate("/create-task")} className="text-xl px-4 py-3 bg-red-400 text-white rounded-lg hover:bg-red-500 cursor-pointer w-full sm:w-auto">
+                        <button onClick={() => navigate("/create-task")} className="w-full rounded-lg bg-red-400 px-4 py-3 text-sm text-white hover:bg-red-500 cursor-pointer sm:w-auto sm:text-xl">
                             + New Task
                         </button>
                     </div>
@@ -214,7 +215,7 @@ const MyTasks = () => {
                     <input
                         type="text"
                         placeholder="Search tasks..."
-                        className="text-xl w-full xl:flex-1 border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                        className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-xl xl:flex-1"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -222,14 +223,61 @@ const MyTasks = () => {
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
-                        className="text-xl w-full xl:w-80 border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer"
+                        className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 cursor-pointer sm:text-xl xl:w-80"
                     >
                         <option value="dueDate">Sort by Due Date</option>
                         <option value="priority">Sort by Difficulty</option>
                     </select>
                 </div>
 
-                <div className="text-xl flex flex-wrap gap-3 mb-8 overflow-x-auto pb-2">
+                <div className="relative mb-8 sm:hidden">
+                    <button
+                        type="button"
+                        onClick={() => setFilterMenuOpen((current) => !current)}
+                        className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-sm"
+                    >
+                        <span>Filter by: {filter}</span>
+                        <i className={`fa-solid fa-chevron-down text-xs transition-transform ${filterMenuOpen ? "rotate-180" : ""}`} aria-hidden="true"></i>
+                    </button>
+
+                    {filterMenuOpen && (
+                        <div className="absolute left-0 right-0 top-14 z-20 overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
+                            {[
+                                { name: "All Tasks", count: tasks.length, color: "bg-red-400 text-white" },
+                                { name: "Today", count: getCount("Today"), icon: "fa-regular fa-calendar" },
+                                { name: "Upcoming", count: getCount("Upcoming"), icon: "fa-regular fa-clock" },
+                                { name: "Completed", count: getCount("Completed"), icon: "fa-regular fa-circle-check" },
+                                { name: "High Difficulty", count: getCount("High Difficulty"), icon: "fa-solid fa-circle-exclamation" },
+                                { name: "Medium Difficulty", count: getCount("Medium Difficulty"), icon: "fa-solid fa-circle-exclamation" },
+                                { name: "Low Difficulty", count: getCount("Low Difficulty"), icon: "fa-solid fa-circle-exclamation" },
+                            ].map((f) => (
+                                <button
+                                    key={f.name}
+                                    type="button"
+                                    onClick={() => {
+                                        setFilter(f.name);
+                                        setFilterMenuOpen(false);
+                                    }}
+                                    className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${
+                                        filter === f.name
+                                            ? "bg-red-400 text-white"
+                                            : "text-gray-600 hover:bg-gray-50"
+                                    }`}
+                                >
+                                    <span className="flex items-center gap-2">
+                                        {f.icon && <i className={f.icon} aria-hidden="true"></i>}
+                                        {f.name}
+                                    </span>
+                                    <span className={`text-[10px] px-2 py-0.5 rounded-full ${filter === f.name ? "bg-white/20" : "bg-gray-100"}`}>
+                                        {f.count}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                <div className="mb-8 hidden flex-wrap gap-3 overflow-x-auto pb-2 text-xl sm:flex">
                     {[
                         { name: "All Tasks", count: tasks.length, color: "bg-red-400 text-white" },
                         { name: "Today", count: getCount("Today"), icon: "fa-regular fa-calendar" },
