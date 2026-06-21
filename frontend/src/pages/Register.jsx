@@ -85,16 +85,16 @@ const Register = () => {
         </div>
 
         {/* Header */}
-        <h1 className="mt-6 text-4xl font-bold text-gray-900">
+        <h1 className="mt-5 text-2xl font-bold text-gray-900 sm:mt-6 sm:text-4xl">
           Create your account
         </h1>
-        <p className="text-xl mt-2 text-gray-500 text-base">
+        <p className="mt-2 text-sm text-gray-500 sm:text-xl">
           Start managing your tasks smarter
         </p>
 
         {/* Card */}
-        <div className="text-xl mt-10 w-full bg-white rounded-2xl shadow-md border border-gray-100 px-10 py-10">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="mt-6 w-full rounded-2xl border border-gray-100 bg-white px-5 py-6 text-sm shadow-md sm:mt-10 sm:px-10 sm:py-10 sm:text-xl">
+          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
             {/* Error */}
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
@@ -113,14 +113,14 @@ const Register = () => {
                 value={form.fullName}
                 onChange={handleChange}
                 placeholder="John Doe"
-                className="w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                 required
               />
             </div>
 
             {/* Email */}
             <div className="space-y-2">
-              <label className="text-xl font-medium text-gray-700">
+              <label className="text-sm font-medium text-gray-700 sm:text-xl">
                 Email address
               </label>
               <input
@@ -129,14 +129,14 @@ const Register = () => {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
-                className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                 required
               />
             </div>
 
             {/* Password */}
             <div className="space-y-2">
-              <label className="text-xl font-medium text-gray-700">
+              <label className="text-sm font-medium text-gray-700 sm:text-xl">
                 Password
               </label>
               <PasswordInput
@@ -144,14 +144,14 @@ const Register = () => {
                 value={form.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                 required
               />
             </div>
 
             {/* Confirm password */}
             <div className="space-y-2">
-              <label className="text-xl font-medium text-gray-700">
+              <label className="text-sm font-medium text-gray-700 sm:text-xl">
                 Confirm password
               </label>
               <PasswordInput
@@ -159,7 +159,7 @@ const Register = () => {
                 value={form.confirmPassword}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                 required
               />
             </div>
@@ -167,13 +167,13 @@ const Register = () => {
             {/* Button */}
             <button
               type="submit"
-              className="text-xl w-full bg-red-400 hover:bg-red-500 text-white font-medium py-3 rounded-lg transition cursor-pointer"
+              className="w-full cursor-pointer rounded-lg bg-red-400 py-3 text-sm font-medium text-white transition hover:bg-red-500 sm:text-xl"
             >
               Create account
             </button>
 
             {/* Bottom link */}
-            <p className="text-xl text-center text-sm text-gray-500">
+            <p className="text-center text-sm text-gray-500 sm:text-xl">
               Already have an account?{" "}
               <button
                 type="button"

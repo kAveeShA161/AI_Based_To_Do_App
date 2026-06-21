@@ -58,18 +58,18 @@ const Login = () => {
         </div>
 
         {/* Header */}
-        <h1 className="mt-6 text-4xl font-bold text-gray-900">Welcome back</h1>
-        <p className="text-xl mt-2 text-gray-500 text-base">
+        <h1 className="mt-5 text-2xl font-bold text-gray-900 sm:mt-6 sm:text-4xl">Welcome back</h1>
+        <p className="mt-2 text-sm text-gray-500 sm:text-xl">
           Sign in to your TaskFlow account
         </p>
 
         {/* Card */}
-        <div className="mt-10 w-full bg-white rounded-2xl shadow-md border border-gray-100 px-10 py-10">
+        <div className="mt-6 w-full rounded-2xl border border-gray-100 bg-white px-5 py-6 shadow-md sm:mt-10 sm:px-10 sm:py-10">
 
-          <form onSubmit={onSubmitHandler} className="space-y-7">
+          <form onSubmit={onSubmitHandler} className="space-y-5 sm:space-y-7">
             {/* Email */}
             <div className="space-y-2">
-              <label className="text-xl font-medium text-gray-700">
+              <label className="text-sm font-medium text-gray-700 sm:text-xl">
                 Email address
               </label>
               <input
@@ -78,14 +78,14 @@ const Login = () => {
                 placeholder="you@example.com"
                 onChange={e => setEmail(e.target.value)}
                 value={email}
-                className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                 required
               />
             </div>
 
             {/* Password */}
             <div className="space-y-2">
-              <label className="text-xl font-medium text-gray-700">
+              <label className="text-sm font-medium text-gray-700 sm:text-xl">
                 Password
               </label>
               <PasswordInput
@@ -93,14 +93,14 @@ const Login = () => {
                 onChange={e => setPassword(e.target.value)}
                 value={password}
                 placeholder="••••••••"
-                className="text-xl w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300"
+                className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                 required
               />
 
               <div className="flex justify-end">
                 <button
                   type="button"
-                  className="text-xl text-red-400 hover:text-red-500 cursor-pointer"
+                  className="cursor-pointer text-sm text-red-400 hover:text-red-500 sm:text-xl"
                   onClick={() => {
                     navigate("/password-reset")
                     console.log("Forgot password clicked")
@@ -114,17 +114,17 @@ const Login = () => {
             {/* Sign in button */}
             <button
               type="submit"
-              className="text-xl w-full bg-red-400 hover:bg-red-500 text-white font-medium py-3 rounded-lg transition cursor-pointer"
+              className="w-full cursor-pointer rounded-lg bg-red-400 py-3 text-sm font-medium text-white transition hover:bg-red-500 sm:text-xl"
             >
               Sign in
             </button>
 
             {/* Bottom text */}
-            <p className="text-xl text-center text-sm text-gray-500">
+            <p className="text-center text-sm text-gray-500 sm:text-xl">
               Don&apos;t have an account?{" "}
               <button
                 type="button"
-                className="text-xl text-red-400 hover:text-red-500 font-medium cursor-pointer"
+                className="cursor-pointer font-medium text-red-400 hover:text-red-500"
                 onClick={() => {
                   navigate("/register");
                   console.log("Sign up clicked");

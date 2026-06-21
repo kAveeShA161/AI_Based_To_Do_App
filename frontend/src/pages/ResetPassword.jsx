@@ -105,18 +105,18 @@ const ResetPassword = () => {
           <img src={assets.Logo} alt="TaskFlow logo" className="w-20" />
         </button>
 
-        <h1 className="mt-6 text-4xl font-bold text-gray-900">
+        <h1 className="mt-5 text-2xl font-bold text-gray-900 sm:mt-6 sm:text-4xl">
           Reset password
         </h1>
-        <p className="mt-2 text-center text-xl text-gray-500">
+        <p className="mt-2 text-center text-sm text-gray-500 sm:text-xl">
           Enter your email and use the OTP to set a new password
         </p>
 
-        <div className="mt-10 w-full rounded-2xl border border-gray-100 bg-white px-10 py-10 shadow-md">
+        <div className="mt-6 w-full rounded-2xl border border-gray-100 bg-white px-5 py-6 shadow-md sm:mt-10 sm:px-10 sm:py-10">
           {!otpSent ? (
-            <form onSubmit={handleSendOtp} className="space-y-7">
+            <form onSubmit={handleSendOtp} className="space-y-5 sm:space-y-7">
               <div className="space-y-2">
-                <label className="text-xl font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 sm:text-xl">
                   Email address
                 </label>
                 <input
@@ -125,7 +125,7 @@ const ResetPassword = () => {
                   placeholder="you@example.com"
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-xl outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200"
+                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                   required
                 />
               </div>
@@ -133,19 +133,19 @@ const ResetPassword = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-lg bg-red-400 py-3 text-xl font-medium text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
+                className="w-full rounded-lg bg-red-400 py-3 text-sm font-medium text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70 sm:text-xl"
               >
                 {loading ? "Sending..." : "Send OTP"}
               </button>
             </form>
           ) : (
-            <form onSubmit={handleResetPassword} className="space-y-6">
-              <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-base text-red-600">
+            <form onSubmit={handleResetPassword} className="space-y-5 sm:space-y-6">
+              <div className="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600 sm:text-base">
                 OTP sent to {email}. It expires in 15 minutes.
               </div>
 
               <div className="space-y-2">
-                <label className="text-xl font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 sm:text-xl">
                   Reset OTP
                 </label>
                 <input
@@ -156,13 +156,13 @@ const ResetPassword = () => {
                   placeholder="123456"
                   value={otp}
                   onChange={(event) => setOtp(event.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-xl outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200"
+                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xl font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 sm:text-xl">
                   New password
                 </label>
                 <PasswordInput
@@ -170,13 +170,13 @@ const ResetPassword = () => {
                   placeholder="Enter new password"
                   value={newPassword}
                   onChange={(event) => setNewPassword(event.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-xl outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200"
+                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <label className="text-xl font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 sm:text-xl">
                   Confirm new password
                 </label>
                 <PasswordInput
@@ -184,7 +184,7 @@ const ResetPassword = () => {
                   placeholder="Confirm new password"
                   value={confirmPassword}
                   onChange={(event) => setConfirmPassword(event.target.value)}
-                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-xl outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200"
+                  className="w-full rounded-lg border border-gray-200 px-4 py-3 text-sm outline-none focus:border-red-300 focus:ring-2 focus:ring-red-200 sm:text-xl"
                   required
                 />
               </div>
@@ -192,7 +192,7 @@ const ResetPassword = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-lg bg-red-400 py-3 text-xl font-medium text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70"
+                className="w-full rounded-lg bg-red-400 py-3 text-sm font-medium text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-70 sm:text-xl"
               >
                 {loading ? "Resetting..." : "Reset password"}
               </button>
@@ -201,14 +201,14 @@ const ResetPassword = () => {
                 type="button"
                 disabled={loading}
                 onClick={handleSendOtp}
-                className="w-full text-center text-xl font-medium text-red-400 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-70"
+                className="w-full text-center text-sm font-medium text-red-400 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-70 sm:text-xl"
               >
                 Resend OTP
               </button>
             </form>
           )}
 
-          <p className="mt-7 text-center text-xl text-gray-500">
+          <p className="mt-6 text-center text-sm text-gray-500 sm:mt-7 sm:text-xl">
             Remembered your password?{" "}
             <button
               type="button"
