@@ -12,16 +12,16 @@ const MonthlyStatsModal = ({ open, onClose, tasks = [] }) => {
                 <button
                     type="button"
                     onClick={onClose}
-                    className="absolute right-4 top-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm transition-colors hover:text-slate-900"
+                    className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm transition-colors hover:text-slate-900 sm:right-4 sm:h-11 sm:w-11"
                     aria-label="Close monthly stats"
                 >
-                    <i className="fa-solid fa-xmark text-xl" aria-hidden="true"></i>
+                    <i className="fa-solid fa-xmark text-base sm:text-xl" aria-hidden="true"></i>
                 </button>
 
-                <div className="border-b border-slate-200 bg-white px-6 py-5 sm:px-8">
+                <div className="border-b border-slate-200 bg-white px-5 py-4 sm:px-8 sm:py-5">
                     <div className="flex flex-col gap-3 pr-12 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-teal-500">
+                            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-teal-500 sm:text-sm sm:tracking-[0.24em]">
                                 Monthly Stats
                             </p>
                             
@@ -30,7 +30,7 @@ const MonthlyStatsModal = ({ open, onClose, tasks = [] }) => {
                     </div>
                 </div>
 
-                <div className="overflow-y-auto p-6 sm:p-8">
+                <div className="overflow-y-auto p-4 sm:p-8">
                     <MonthlyTaskLineChart tasks={tasks} />
                 </div>
             </div>
