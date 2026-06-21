@@ -192,6 +192,11 @@ const AIPlanner = () => {
                                             <div className="flex h-7 w-7 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-xs font-bold text-black shadow-inner sm:h-8 sm:w-8 sm:text-sm">
                                                 {index + 1}
                                             </div>
+                                            <div>
+                                                <p className="text-xs text-gray-500 sm:text-sm">
+                                                    Adjust the details if needed
+                                                </p>
+                                            </div>
                                         </div>
 
                                         <span
