@@ -325,7 +325,7 @@ const MonthlyTaskLineChart = ({ tasks = [] }) => {
                             return (
                                 <span
                                     key={point.day}
-                                    className="absolute top-full -translate-x-1/2 translate-y-1"
+                                    className="absolute top-0 -translate-x-1/2"
                                     style={{ left: `${left}%` }}
                                 >
                                     {point.day}
