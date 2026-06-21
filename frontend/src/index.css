@@ -24,15 +24,15 @@
 
 .taskflow-toast-body {
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  font-size: 14px;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
   font-weight: 500;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 .taskflow-toast .Toastify__toast-icon {
-  width: 18px;
+  width: 16px;
   margin-inline-end: 2px;
 }
 
