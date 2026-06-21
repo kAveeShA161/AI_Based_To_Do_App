@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -59,7 +60,10 @@ const StyledDatePicker = ({
     const selectedDate = useMemo(() => parseDateValue(value), [value]);
     const [isOpen, setIsOpen] = useState(false);
     const [viewDate, setViewDate] = useState(() => selectedDate || new Date());
+    const [popoverPosition, setPopoverPosition] = useState({ left: 0, top: 0, width: 320 });
     const pickerRef = useRef(null);
+    const triggerRef = useRef(null);
+    const popoverRef = useRef(null);
 
     const updateOpenState = (nextOpen) => {
         setIsOpen(nextOpen);
@@ -74,7 +78,10 @@ const StyledDatePicker = ({
 
     useEffect(() => {
         const handleOutsideClick = (event) => {
-            if (pickerRef.current && !pickerRef.current.contains(event.target)) {
+            const clickedTrigger = pickerRef.current?.contains(event.target);
+            const clickedPopover = popoverRef.current?.contains(event.target);
+
+            if (!clickedTrigger && !clickedPopover) {
                 updateOpenState(false);
             }
         };
@@ -82,6 +89,40 @@ const StyledDatePicker = ({
         document.addEventListener("mousedown", handleOutsideClick);
         return () => document.removeEventListener("mousedown", handleOutsideClick);
     }, []);
+
+    useEffect(() => {
+        if (!isOpen) {
+            return undefined;
+        }
+
+        const updatePopoverPosition = () => {
+            const triggerRect = triggerRef.current?.getBoundingClientRect();
+            if (!triggerRect) {
+                return;
+            }
+
+            const viewportPadding = 24;
+            const width = Math.min(320, window.innerWidth - viewportPadding * 2);
+            const centeredLeft = triggerRect.left + triggerRect.width / 2;
+            const minLeft = viewportPadding + width / 2;
+            const maxLeft = window.innerWidth - viewportPadding - width / 2;
+
+            setPopoverPosition({
+                left: Math.min(Math.max(centeredLeft, minLeft), maxLeft),
+                top: triggerRect.bottom + 8,
+                width,
+            });
+        };
+
+        updatePopoverPosition();
+        window.addEventListener("resize", updatePopoverPosition);
+        window.addEventListener("scroll", updatePopoverPosition, true);
+
+        return () => {
+            window.removeEventListener("resize", updatePopoverPosition);
+            window.removeEventListener("scroll", updatePopoverPosition, true);
+        };
+    }, [isOpen]);
 
     const monthDays = useMemo(() => getMonthDays(viewDate), [viewDate]);
 
@@ -118,6 +159,7 @@ const StyledDatePicker = ({
     return (
         <div ref={pickerRef} className={`relative ${isOpen ? "z-50" : "z-0"} ${className}`}>
             <button
+                ref={triggerRef}
                 type="button"
                 onClick={() => updateOpenState(!isOpen)}
                 className={`flex w-full items-center justify-between gap-3 rounded-xl border bg-white px-4 py-3 text-left text-sm font-semibold shadow-sm outline-none transition-colors sm:text-lg ${
@@ -132,8 +174,17 @@ const StyledDatePicker = ({
                 <i className="fa-regular fa-calendar text-slate-800" aria-hidden="true"></i>
             </button>
 
-            {isOpen && (
-                <div className={`absolute left-1/2 z-[999] mt-2 w-[min(20rem,calc(100vw-3rem))] -translate-x-1/2 rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-900/15 ${popoverClassName}`}>
+            {isOpen && createPortal(
+                <div
+                    ref={popoverRef}
+                    className={`fixed z-[9999] max-h-[min(28rem,calc(100vh-2rem))] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-900/15 ${popoverClassName}`}
+                    style={{
+                        left: `${popoverPosition.left}px`,
+                        top: `${popoverPosition.top}px`,
+                        width: `${popoverPosition.width}px`,
+                        transform: "translateX(-50%)",
+                    }}
+                >
                     <div className="flex items-center justify-between rounded-xl bg-slate-50 px-2 py-2">
                         <button
                             type="button"
@@ -208,7 +259,8 @@ const StyledDatePicker = ({
                             Today
                         </button>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );
