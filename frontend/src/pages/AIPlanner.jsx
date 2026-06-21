@@ -6,9 +6,9 @@ import NavBar from "../components/NavBar";
 import { AppContext } from "../context/AppContext";
 
 const priorityStyles = {
-    High: "bg-red-100 text-red-700",
-    Medium: "bg-yellow-100 text-yellow-700",
-    Low: "bg-green-100 text-green-700",
+    High: "border-red-200 bg-red-50 text-red-700",
+    Medium: "border-amber-200 bg-amber-50 text-amber-700",
+    Low: "border-emerald-200 bg-emerald-50 text-emerald-700",
 };
 
 const AIPlanner = () => {
@@ -158,10 +158,13 @@ const AIPlanner = () => {
                 </div>
 
                 {tasks.length > 0 && (
-                    <div className="bg-white shadow-sm rounded-3xl border border-gray-100 p-5 sm:p-6 md:p-8">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+                    <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] sm:p-6 md:p-8">
+                        <div className="mb-6 flex flex-col gap-4 border-b border-gray-100 pb-6 md:flex-row md:items-center md:justify-between">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-red-500">
+                                    AI generated draft
+                                </p>
+                                <h2 className="text-xl font-bold text-gray-950 sm:text-2xl">
                                     Edit Your Tasks
                                 </h2>
                                 <p className="mt-1 text-sm text-gray-500 sm:text-base">
@@ -171,7 +174,7 @@ const AIPlanner = () => {
 
                             <button
                                 onClick={saveTasks}
-                                className="w-full rounded-lg bg-red-400 px-5 py-3 text-base text-white hover:bg-red-500 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed md:w-auto md:text-lg"
+                                className="w-full rounded-xl bg-gray-950 px-5 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-gray-800 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed md:w-auto md:text-lg"
                                 disabled={saving}
                             >
                                 {saving ? "Saving..." : "Save All Tasks"}
@@ -182,15 +185,15 @@ const AIPlanner = () => {
                             {tasks.map((task, index) => (
                                 <div
                                     key={index}
-                                    className="rounded-2xl border border-gray-100 bg-gray-50 p-4 sm:p-6"
+                                    className="group rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_18px_45px_rgba(15,23,42,0.09)] sm:p-6"
                                 >
-                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+                                    <div className="mb-5 flex flex-col gap-3 border-b border-gray-100 pb-5 sm:flex-row sm:items-start sm:justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center font-semibold">
+                                            <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-gray-50 text-sm font-bold text-black shadow-inner">
                                                 {index + 1}
                                             </div>
                                             <div>
-                                                <p className="text-base font-semibold text-gray-800 sm:text-lg">
+                                                <p className="text-base font-semibold text-gray-950 sm:text-lg">
                                                     Suggested Task
                                                 </p>
                                                 <p className="text-sm text-gray-500">
@@ -200,7 +203,7 @@ const AIPlanner = () => {
                                         </div>
 
                                         <span
-                                            className={`px-3 py-1 rounded-full text-sm font-medium w-fit ${priorityStyles[task.priority] || "bg-gray-100 text-gray-700"}`}
+                                            className={`w-fit rounded-full border px-3 py-1 text-xs font-semibold ${priorityStyles[task.priority] || "border-gray-200 bg-gray-50 text-gray-700"}`}
                                         >
                                             {task.priority} Difficulty
                                         </span>
@@ -212,7 +215,7 @@ const AIPlanner = () => {
                                                 Task Title
                                             </label>
                                             <input
-                                                className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-base outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-lg"
+                                                className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
                                                 value={task.title}
                                                 onChange={(e) =>
                                                     updateTask(index, "title", e.target.value)
@@ -225,7 +228,7 @@ const AIPlanner = () => {
                                                 Description
                                             </label>
                                             <textarea
-                                                className="mt-2 h-28 w-full resize-none rounded-lg border border-gray-200 px-4 py-3 text-base outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-lg"
+                                                className="mt-2 h-28 w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
                                                 placeholder="Add optional notes for this task"
                                                 value={task.description}
                                                 onChange={(e) =>
@@ -240,7 +243,7 @@ const AIPlanner = () => {
                                                     Difficulty Level
                                                 </label>
                                                 <select
-                                                    className="mt-2 w-full cursor-pointer rounded-lg border border-gray-200 px-4 py-3 text-base outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-lg"
+                                                    className="mt-2 w-full cursor-pointer rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
                                                     value={task.priority}
                                                     onChange={(e) =>
                                                         updateTask(index, "priority", e.target.value)
@@ -258,7 +261,7 @@ const AIPlanner = () => {
                                                 </label>
                                                 <input
                                                     type="date"
-                                                    className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-base outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-lg"
+                                                    className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
                                                     value={task.dueDate}
                                                     onChange={(e) =>
                                                         updateTask(index, "dueDate", e.target.value)
@@ -271,7 +274,7 @@ const AIPlanner = () => {
                                                     Category
                                                 </label>
                                                 <input
-                                                    className="mt-2 w-full rounded-lg border border-gray-200 px-4 py-3 text-base outline-none focus:ring-2 focus:ring-red-200 focus:border-red-300 sm:text-lg"
+                                                    className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-base outline-none transition focus:border-gray-400 focus:bg-white focus:ring-4 focus:ring-gray-100 sm:text-lg"
                                                     placeholder="Work, Personal, Study..."
                                                     value={task.category}
                                                     onChange={(e) =>
