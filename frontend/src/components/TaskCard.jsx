@@ -99,7 +99,7 @@ const TaskCard = ({ task, onUpdate, onDelete, readOnly = false }) => {
                             type="checkbox"
                             checked={task.isCompleted}
                             onChange={handleCheckboxChange}
-                            className="h-5 w-5 rounded border-gray-300 text-red-400 focus:ring-red-400 cursor-pointer sm:h-6 sm:w-6"
+                            className="h-5 w-5 cursor-pointer rounded border-gray-300 text-teal-500 focus:ring-teal-400 sm:h-6 sm:w-6"
                         />
                     </div>
                 )}

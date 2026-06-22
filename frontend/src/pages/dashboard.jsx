@@ -259,7 +259,7 @@ const Dashboard = () => {
                         </p>
                     </div>
 
-                    <div className="mt-5 grid grid-cols-3 gap-1.5 overflow-x-auto px-0.5 py-1 sm:mt-6 sm:gap-3 sm:px-0 sm:py-0 sm:pb-1">
+                    <div className="mt-6 grid grid-cols-3 gap-1.5 overflow-x-auto px-1 py-2 sm:mt-7 sm:gap-3 sm:overflow-visible sm:px-1 sm:py-2">
                         {moodOptions.map((mood) => {
                             const isActive = mood.id === selectedMood;
 
