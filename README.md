@@ -92,12 +92,6 @@ Current production setup:
 | AI Task Planner | <img width="1898" height="848" alt="image" src="https://github.com/user-attachments/assets/9b4573ec-fa7d-4c6f-97ff-f89aa6efbd15" /> |
 
 
-Example Markdown after adding an image:
-
-```md
-![Dashboard](docs/screenshots/dashboard.png)
-```
-
 ## Environment Variables
 
 Create separate `.env` files inside `Backend/` and `frontend/`.
