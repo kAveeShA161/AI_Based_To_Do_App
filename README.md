@@ -86,10 +86,13 @@ Upload application screenshots to `docs/screenshots/` and add them here.
 
 | Page | Screenshot |
 | --- | --- |
-| Login | `docs/screenshots/login.png` |
-| Dashboard | `docs/screenshots/dashboard.png` |
-| Task Planner | `docs/screenshots/task-planner.png` |
-| Calendar / History | `docs/screenshots/calendar-history.png` |
+| Login | <img width="1917" height="856" alt="image" src="https://github.com/user-attachments/assets/c020bf40-3470-4aef-a3d4-b122554218d4" /> |
+| Dashboard | <img width="1858" height="850" alt="image" src="https://github.com/user-attachments/assets/29d2f6d5-f737-4b06-bd5c-b772b6861c9a" /> |
+| Task Planner | <img width="1898" height="847" alt="image" src="https://github.com/user-attachments/assets/0cbe0403-31c5-4a5d-86be-d6509b1c90c8" /> |
+| History Calendar | <img width="1898" height="838" alt="image" src="https://github.com/user-attachments/assets/c8d26946-d964-47e2-b16b-e796a69f2196" /> |
+| Monthly Stats | <img width="1898" height="840" alt="image" src="https://github.com/user-attachments/assets/c4b09fcd-2f3c-4899-9c42-789b110d3fa6" /> |
+| AI Task Planner | <img width="1898" height="848" alt="image" src="https://github.com/user-attachments/assets/9b4573ec-fa7d-4c6f-97ff-f89aa6efbd15" /> |
+
 
 Example Markdown after adding an image:
 
