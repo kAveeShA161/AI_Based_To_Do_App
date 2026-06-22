@@ -82,8 +82,6 @@ Current production setup:
 
 ## Screenshots
 
-Upload application screenshots to `docs/screenshots/` and add them here.
-
 | Page | Screenshot |
 | --- | --- |
 | Login | <img width="1917" height="856" alt="image" src="https://github.com/user-attachments/assets/c020bf40-3470-4aef-a3d4-b122554218d4" /> |
