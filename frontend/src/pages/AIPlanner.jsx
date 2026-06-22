@@ -191,7 +191,7 @@ const AIPlanner = () => {
                                 <div
                                     key={index}
                                     className={`group relative rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-gray-300 hover:shadow-[0_18px_45px_rgba(15,23,42,0.09)] sm:p-5 ${
-                                        openDatePickerIndex === index ? "z-50" : "z-0"
+                                        openDatePickerIndex === index || openPriorityIndex === index ? "z-50" : "z-0"
                                     }`}
                                 >
                                     <div className="mb-5 flex flex-col gap-3 border-b border-gray-100 pb-4 sm:flex-row sm:items-start sm:justify-between">
@@ -253,6 +253,7 @@ const AIPlanner = () => {
                                                             current === index ? null : index
                                                         )
                                                     }
+                                                    onMouseDown={() => setOpenDatePickerIndex(null)}
                                                     className="flex w-full items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-left text-sm font-medium text-gray-700 shadow-sm outline-none transition-colors hover:border-red-200 hover:bg-red-50/30 focus:border-red-300 focus:bg-white focus:ring-2 focus:ring-red-100 sm:text-lg"
                                                 >
                                                     <span>{task.priority}</span>
@@ -260,7 +261,7 @@ const AIPlanner = () => {
                                                 </button>
 
                                                 {openPriorityIndex === index && (
-                                                    <div className="absolute left-0 top-full z-30 mt-2 w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
+                                                    <div className="absolute left-0 top-full z-[999] mt-2 w-full overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl">
                                                         {["High", "Medium", "Low"].map((level) => (
                                                             <button
                                                                 key={level}
