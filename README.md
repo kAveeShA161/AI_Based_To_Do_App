@@ -44,7 +44,6 @@ Current production setup:
 ## Repository Structure
 
 ```text
-.
 +-- Backend/
 |   +-- config/
 |   +-- controllers/
